@@ -19,8 +19,7 @@ Fields required to normal operation are:
 * Your amazon access and secret keys (grab them [here](https://portal.aws.amazon.com/gp/aws/securityCredentials))
 * Path to putty.exe (you can download it from [official site](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html))
 * Path to your ssh private key (.ppk)
+
 And don't forget to configure your region URL if it is not default (N. Virginia)
-
-
 
 Enjoy.
