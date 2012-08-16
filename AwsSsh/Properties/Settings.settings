@@ -1,0 +1,33 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="AwsSsh.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="AWSAccessKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Put your access key here</Value>
+    </Setting>
+    <Setting Name="AWSSecretKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Put your secret key here</Value>
+    </Setting>
+    <Setting Name="ServiceUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://us-east-1.ec2.amazonaws.com</Value>
+    </Setting>
+    <Setting Name="CloseOnConnect" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="DefaultUser" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">ubuntu</Value>
+    </Setting>
+    <Setting Name="CommandLineArgs" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="PuttyPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\putty.exe</Value>
+    </Setting>
+    <Setting Name="KeyPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\certificate.ppk</Value>
+    </Setting>
+    <Setting Name="UpdateInterval" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

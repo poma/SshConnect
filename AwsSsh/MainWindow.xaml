@@ -1,0 +1,89 @@
+﻿<Window x:Class="AwsSsh.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:local="clr-namespace:AwsSsh"
+		DataContext="{Binding RelativeSource={RelativeSource self}}"
+        Title="Connect to server" Height="600" Width="250" MinHeight="300"
+		PreviewKeyDown="Window_PreviewKeyDown"
+		FocusManager.FocusedElement="{Binding ElementName=textBox}"
+		WindowStartupLocation="CenterScreen" SizeToContent="Manual">
+	<Window.Resources>
+		<DataTemplate x:Key="instanceTemplate" >
+			<DockPanel ToolTip="{Binding Tooltip}">
+				<Image Width="10" Height="10" Margin="4, 0" ToolTip="{Binding StateName}" RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased" DockPanel.Dock="Left">
+					<Image.Style>
+						<Style TargetType="Image">
+							<Style.Triggers>
+								<DataTrigger Binding="{Binding State}" Value="Running">
+									<Setter Property="Source" Value="/Resources/green.png" />
+								</DataTrigger>
+								<DataTrigger Binding="{Binding State}" Value="Pending">
+									<Setter Property="Source" Value="/Resources/yellow.png" />
+								</DataTrigger>
+								<DataTrigger Binding="{Binding State}" Value="ShuttingDown">
+									<Setter Property="Source" Value="/Resources/yellow.png" />
+								</DataTrigger>
+								<DataTrigger Binding="{Binding State}" Value="Stopping">
+									<Setter Property="Source" Value="/Resources/yellow.png" />
+								</DataTrigger>
+								<DataTrigger Binding="{Binding State}" Value="Stopped">
+									<Setter Property="Source" Value="/Resources/red.png" />
+								</DataTrigger>
+								<DataTrigger Binding="{Binding State}" Value="Terminated">
+									<Setter Property="Source" Value="/Resources/red.png" />
+								</DataTrigger>
+							</Style.Triggers>
+							<Setter Property="Source" Value="/Resources/gray.png" />
+						</Style>
+					</Image.Style>
+				</Image>
+				<TextBlock Text="{Binding Name}"  />
+			</DockPanel>
+		</DataTemplate>
+		<Style x:Key="itemContainerStyle" TargetType="{x:Type ListBoxItem}">
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type ListBoxItem}">
+						<Border x:Name="border" Margin="2, 1" CornerRadius="4" Background="Transparent">					
+							<ContentPresenter x:Name="content" Margin="4, 4" />
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsMouseOver" Value="true">
+								<Setter TargetName="border" Property="Background" Value="#EEEEFF" />
+							</Trigger>
+							<Trigger Property="IsSelected" Value="true">
+								<Setter TargetName="border" Property="Background" Value="#CCCCE7" />
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+			<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+			<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+		</Style>
+		<BooleanToVisibilityConverter x:Key="boolToVis" />
+	</Window.Resources>
+	<Grid>
+		<DockPanel>
+			<DockPanel DockPanel.Dock="Top">				
+				<Grid DockPanel.Dock="Right" Width="16" Height="16" VerticalAlignment="Center">
+					<local:GifImage Width="16" Height="16" Panel.ZIndex="1"
+									Uri="pack://application:,,,/Resources/throbber.gif"
+									Visibility="{Binding IsLoadComplete, Converter={StaticResource boolToVis}, ConverterParameter=true}" 
+									RenderOptions.BitmapScalingMode="NearestNeighbor" />
+					<Image Source="/Resources/refresh.png" Opacity="0.5" Width="16" Height="16" MouseDown="RefreshButton_MouseDown" />
+				</Grid>
+				<TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" x:Name="textBox" BorderThickness="0, 0, 0, 0" />
+			</DockPanel>
+			<ListBox
+				Name="listBox" FocusVisualStyle="{x:Null}"
+				MouseDoubleClick="listBox_MouseDoubleClick" 
+				ItemTemplate="{StaticResource instanceTemplate}" 
+				ItemContainerStyle="{StaticResource itemContainerStyle}" 
+				BorderThickness="0, 1, 0, 0" 
+				ItemsSource="{Binding InstanceCollectionView.View}"/>
+		</DockPanel>		
+		
+	</Grid>
+
+</Window>
