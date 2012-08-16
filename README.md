@@ -11,6 +11,7 @@ You can download compiled version from [downloads page](https://github.com/poma/
 Requirements
 ------------
 Requires .NET Framework 4.0
+
 Before using it you need to edit AwsSsh.exe.config.
 
 Fields required to normal operation are:
