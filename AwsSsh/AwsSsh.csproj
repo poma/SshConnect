@@ -39,10 +39,9 @@
     <ApplicationIcon>connect.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AWSSDK, Version=1.4.12.0, Culture=neutral, PublicKeyToken=cd2d24cd2bace800, processorArchitecture=MSIL">
+    <Reference Include="AWSSDK, Version=1.4.11.0, Culture=neutral, PublicKeyToken=cd2d24cd2bace800, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Windows\assembly\GAC_MSIL\AWSSDK\1.4.12.0__cd2d24cd2bace800\AWSSDK.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>.\AWSSDK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -121,7 +120,11 @@
   <ItemGroup>
     <Resource Include="Resources\refresh.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="AWSSDK.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
