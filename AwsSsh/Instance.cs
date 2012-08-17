@@ -9,7 +9,7 @@ namespace AwsSsh
 	[Serializable]
 	public class Instance : INotifyPropertyChanged
 	{
-		public string Id { get; private set; }
+		public string Id { get; set; }
 
 		#region Properties
 		private string _name;
@@ -118,14 +118,6 @@ namespace AwsSsh
 			{
 				return String.Format("Instance Type: {0}\n\nAddresses:\nPublic IP: {1}\nPrivate IP: {2}\nPublic DNS: {3}\nPrivate DNS: {4}", InstanceType, PublicIp, PrivateIp, PublicDnsName, PrivateDnsName);
 			}
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the Instance class.
-		/// </summary>
-		public Instance(string id)
-		{
-			Id = id;
 		}
 
 		/// <summary>

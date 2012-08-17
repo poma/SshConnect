@@ -10,15 +10,13 @@ You can download compiled version from [downloads page](https://github.com/poma/
 
 Requirements
 ------------
-Requires .NET Framework 4.0
 
-Before using it you need to edit AwsSsh.exe.config.
+For normal operation you will need:
 
-Fields required to normal operation are:
-
+* [.NET Framework 4.0](http://www.microsoft.com/en-us/download/details.aspx?id=17851)
 * Your amazon access and secret keys (grab them [here](https://portal.aws.amazon.com/gp/aws/securityCredentials))
-* Path to putty.exe (you can download it from [official site](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html))
-* Path to your ssh private key (.ppk)
+* Your private ssh key (.ppk)
+* Putty.exe (you can download it from [official site](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html))
 
 And don't forget to configure your region URL if it is not default (N. Virginia)
 

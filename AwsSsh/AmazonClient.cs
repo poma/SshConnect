@@ -6,6 +6,7 @@ using Amazon;
 using Amazon.EC2;
 using Amazon.EC2.Model;
 using AwsSsh.Properties;
+using System.Windows;
 
 namespace AwsSsh
 {
@@ -27,8 +28,9 @@ namespace AwsSsh
 
 				foreach (var image in ec2Response.DescribeInstancesResult.Reservation.SelectMany(a => a.RunningInstance))
 				{
-					var instance = new Instance(image.InstanceId)
+					var instance = new Instance()
 					{
+						Id = image.InstanceId,
 						Name = image.Tag[0].Value,
 						StateName = image.InstanceState.Name,
 						State = (InstatnceStates)image.InstanceState.Code,
@@ -65,6 +67,38 @@ namespace AwsSsh
 			itemsToAdd.ForEach(a => existingInstances.Add(a));
 			itemsToRemove.ForEach(a => existingInstances.Remove(a));
 			itemsToUpdate.ForEach(a => Instance.AssignInstance(a.Old, a.New));
+		}
+
+		public static bool CheckConnection()
+		{
+
+			try
+			{
+				AmazonEC2 ec2 = AWSClientFactory.CreateAmazonEC2Client(
+						Settings.Default.AWSAccessKey,
+						Settings.Default.AWSSecretKey,
+						new AmazonEC2Config { ServiceURL = Settings.Default.ServiceUrl }
+						);
+
+				ec2.DescribeInstances(new DescribeInstancesRequest());
+
+				return true;
+			}
+			catch (AmazonEC2Exception ex)
+			{
+				string message = ex.Message + "\r\n" +
+				"Response Status Code: " + ex.StatusCode + "\r\n" +
+				"Error Code: " + ex.ErrorCode + "\r\n" +
+				"Error Type: " + ex.ErrorType + "\r\n" +
+				"Request ID: " + ex.RequestId;
+				MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				return false;
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				return false;
+			}
 		}
 	}
 }

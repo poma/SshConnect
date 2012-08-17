@@ -61,19 +61,32 @@
 			<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
 			<Setter Property="HorizontalContentAlignment" Value="Stretch" />
 		</Style>
+		<Style x:Key="actionStyle" TargetType="Image">
+			<Style.Triggers>
+				<Trigger Property="IsMouseOver" Value="True">
+					<Setter Property="Opacity" Value="1" />
+					<Setter Property="Effect">
+						<Setter.Value>
+							<DropShadowEffect BlurRadius="2" ShadowDepth="0" Color="#FF000000" />
+						</Setter.Value>
+					</Setter>
+				</Trigger>
+			</Style.Triggers>
+		</Style>
 		<BooleanToVisibilityConverter x:Key="boolToVis" />
 	</Window.Resources>
 	<Grid>
 		<DockPanel>
-			<DockPanel DockPanel.Dock="Top">				
+			<DockPanel DockPanel.Dock="Top">
+				<Image Source="/Resources/settings.png" Opacity="0.5" Width="16" Height="16" MouseDown="Preferences_MouseDown" DockPanel.Dock="Right" Style="{StaticResource actionStyle}" ToolTip="Settings" />
 				<Grid DockPanel.Dock="Right" Width="16" Height="16" VerticalAlignment="Center">
-					<local:GifImage Width="16" Height="16" Panel.ZIndex="1"
+					<local:GifImage Width="16" Height="16" Panel.ZIndex="1" ToolTip="Updating..."
 									Uri="pack://application:,,,/Resources/throbber.gif"
-									Visibility="{Binding IsLoadComplete, Converter={StaticResource boolToVis}, ConverterParameter=true}" 
+									Visibility="{Binding IsLoading, Converter={StaticResource boolToVis}}" 
 									RenderOptions.BitmapScalingMode="NearestNeighbor" />
-					<Image Source="/Resources/refresh.png" Opacity="0.5" Width="16" Height="16" MouseDown="RefreshButton_MouseDown" />
+					<Image Source="/Resources/refresh.png" Opacity="0.5" Width="16" Height="16" MouseDown="RefreshButton_MouseDown" Style="{StaticResource actionStyle}" ToolTip="Update" />
 				</Grid>
-				<TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" x:Name="textBox" BorderThickness="0, 0, 0, 0" />
+				<TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" x:Name="textBox" BorderThickness="0" />
 			</DockPanel>
 			<ListBox
 				Name="listBox" FocusVisualStyle="{x:Null}"

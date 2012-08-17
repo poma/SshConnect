@@ -22,23 +22,24 @@ namespace AwsSsh
 		#region Properties
 
 		public const string CacheFile = "cache.xml";
+		public const int BigStep = 20;
+
 		private DispatcherTimer _updateTimer;
 
-		private Settings Settings
+		private static Settings Settings
 		{
 			get { return Settings.Default; }
 		}
 
-        public bool isLoadComplete;
-		public bool IsLoadComplete
+        public bool isLoading;
+		public bool IsLoading
 		{
-			get { return isLoadComplete; }
+			get { return isLoading; }
 			set
 			{
-				if (isLoadComplete == value)
-					return;
-				isLoadComplete = value;
-				PropertyChanged(this, new PropertyChangedEventArgs("IsLoadComplete"));
+				if (isLoading == value) return;
+				isLoading = value;
+				OnPropertyChanged("IsLoading");
 			}
 		}
 
@@ -87,11 +88,6 @@ namespace AwsSsh
 
 		public MainWindow()
 		{
-			if (!CheckConfig())
-			{
-				Application.Current.Shutdown();
-				return;
-			}
 			InitializeComponent();
 			LoadInstanceCache();
 			RefreshList();
@@ -102,7 +98,7 @@ namespace AwsSsh
 				.Tick += (obj, args) => { if (!textBox.IsFocused) textBox.Focus(); };
 
 			_updateTimer = new DispatcherTimer { IsEnabled = true, Interval = TimeSpan.FromSeconds(Settings.UpdateInterval) };
-			_updateTimer.Tick += (obj, args) => { RefreshList(); }; // This stupid hack is used to prevent update timer from spamming errors
+			_updateTimer.Tick += (obj, args) => { RefreshList(); };
 		}
 
 		//Methods are sorted by importance
@@ -118,11 +114,11 @@ namespace AwsSsh
 		public void RefreshList()
 		{
 			BackgroundWorker w = new BackgroundWorker();
-			IsLoadComplete = false;
+			IsLoading = true;
 			w.DoWork += (obj, args) => args.Result = AmazonClient.GetInstances();
 			w.RunWorkerCompleted += (obj, args) =>
 			{
-				IsLoadComplete = true;
+				IsLoading = false;
 				if (args.Error != null)
 				{
 					_updateTimer.IsEnabled = false;
@@ -177,14 +173,14 @@ namespace AwsSsh
 				case Key.PageUp:
 					if (listBox.Items.Count > 0)
 					{
-						listBox.SelectedIndex = 0;
+						listBox.SelectedIndex = Math.Max(0, listBox.SelectedIndex - BigStep);
 						listBox.ScrollIntoView(listBox.SelectedItem);
 					}
 					break;
 				case Key.PageDown:
 					if (listBox.Items.Count > 0)
 					{
-						listBox.SelectedIndex = listBox.Items.Count - 1;
+						listBox.SelectedIndex = Math.Min(listBox.Items.Count - 1, listBox.SelectedIndex + BigStep);
 						listBox.ScrollIntoView(listBox.SelectedItem);
 					}
 					break;
@@ -227,24 +223,10 @@ namespace AwsSsh
 			}
 			catch { } // I know that this is bad
 		}
-		private bool CheckConfig()
+
+		private void Preferences_MouseDown(object sender, MouseButtonEventArgs e)
 		{
-			if (!File.Exists(Settings.PuttyPath))
-			{
-				MessageBox.Show("Putty not found. Please check your configuration", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-				return false;
-			}
-			if (!File.Exists(Settings.KeyPath))
-			{
-				MessageBox.Show("Key file not found. Please check your configuration", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-				return false;
-			}
-			if (string.IsNullOrWhiteSpace(Settings.AWSAccessKey) || string.IsNullOrWhiteSpace(Settings.AWSAccessKey))
-			{
-				MessageBox.Show("Amazon security credentials are empty. Please check your configuration", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-				return false;
-			}
-			return true;
+			new SettingsDialog().ShowDialog();
 		}
 		private void listBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
 		{
