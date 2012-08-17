@@ -22,12 +22,14 @@ namespace AwsSsh
 		#region Properties
 
 		public const string CacheFile = "cache.xml";
+		private DispatcherTimer _updateTimer;
+
 		private Settings Settings
 		{
 			get { return Settings.Default; }
 		}
 
-		public bool isLoadComplete;
+        public bool isLoadComplete;
 		public bool IsLoadComplete
 		{
 			get { return isLoadComplete; }
@@ -60,6 +62,8 @@ namespace AwsSsh
 				if (_searchText == value) return;
 				_searchText = value;
 				InstanceCollectionView.View.Refresh();
+				if (listBox.Items.Count > 0 && listBox.SelectedItem == null)
+					listBox.SelectedIndex = 0;
 				OnPropertyChanged("SearchText");
 			}
 		}
@@ -96,8 +100,9 @@ namespace AwsSsh
 			// Just in case
 			new DispatcherTimer { IsEnabled = true, Interval = TimeSpan.FromMilliseconds(200) }
 				.Tick += (obj, args) => { if (!textBox.IsFocused) textBox.Focus(); };
-			new DispatcherTimer { IsEnabled = true, Interval = TimeSpan.FromSeconds(Settings.UpdateInterval) }
-				.Tick += (obj, args) => { if (!App.IsError) RefreshList(); }; // This stupid hack is used to prevent update timer from spamming errors
+
+			_updateTimer = new DispatcherTimer { IsEnabled = true, Interval = TimeSpan.FromSeconds(Settings.UpdateInterval) };
+			_updateTimer.Tick += (obj, args) => { RefreshList(); }; // This stupid hack is used to prevent update timer from spamming errors
 		}
 
 		//Methods are sorted by importance
@@ -119,7 +124,10 @@ namespace AwsSsh
 			{
 				IsLoadComplete = true;
 				if (args.Error != null)
+				{
+					_updateTimer.IsEnabled = false;
 					throw new Exception("Error downloading server list: " + args.Error.Message, args.Error);
+				}
 				var newInstances = args.Result as List<Instance>;
 				var previousSelection = listBox.SelectedItem as Instance;
 				using (InstanceCollectionView.DeferRefresh())
@@ -251,6 +259,7 @@ namespace AwsSsh
 
 		private void RefreshButton_MouseDown(object sender, MouseButtonEventArgs e)
 		{
+			_updateTimer.IsEnabled = true;
 			RefreshList();
 		}
 
