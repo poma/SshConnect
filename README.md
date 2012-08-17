@@ -5,6 +5,8 @@ A nice windows tool that lets you quickly SSH to your Amazon EC2 instances using
 
 ![Screenshot](https://raw.github.com/poma/AwsSsh/master/Screenshots/Screenshot1.png)
 
+Download
+------------
 You can download compiled version from [downloads page](https://github.com/poma/AwsSsh/downloads)
 
 
