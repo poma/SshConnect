@@ -166,5 +166,17 @@ namespace AwsSsh.Properties {
                 this["ShowPuttyButton"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IncludePuttySessionsInList {
+            get {
+                return ((bool)(this["IncludePuttySessionsInList"]));
+            }
+            set {
+                this["IncludePuttySessionsInList"] = value;
+            }
+        }
     }
 }

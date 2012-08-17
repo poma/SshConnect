@@ -26,7 +26,8 @@ namespace AwsSsh
 		public const int BigStep = 20;
 
 		private DispatcherTimer _updateTimer;
-		private List<string> _puttySessions;
+
+		public List<string> PuttySessions { get; private set; }
 
 		internal Settings Settings
 		{
@@ -110,6 +111,18 @@ namespace AwsSsh
 
 			_updateTimer = new DispatcherTimer { IsEnabled = true, Interval = TimeSpan.FromSeconds(Settings.UpdateInterval) };
 			_updateTimer.Tick += (obj, args) => { RefreshList(); };
+
+			Settings.PropertyChanged += Settings_PropertyChanged;
+		}
+
+		void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == "IncludePuttySessionsInList")
+			{
+				Instances.Where(a => a.IsPuttyInstance).ToList().ForEach(a => Instances.Remove(a));
+				if (Settings.IncludePuttySessionsInList)
+					GetPuttySessions();
+			}
 		}
 
 		//Methods are sorted by importance
@@ -244,8 +257,9 @@ namespace AwsSsh
 
 		public void GetPuttySessions()
 		{
-			_puttySessions = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\SimonTatham\PuTTY\Sessions").GetSubKeyNames().ToList();
-			foreach (var s in _puttySessions)
+			PuttySessions = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\SimonTatham\PuTTY\Sessions").GetSubKeyNames().ToList();
+			if (!Settings.IncludePuttySessionsInList) return;
+			foreach (var s in PuttySessions)
 			{
 				var inst = new Instance
 				{

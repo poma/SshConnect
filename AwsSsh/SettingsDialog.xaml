@@ -88,6 +88,11 @@
 
 			<DockPanel>
 				<TextBlock Text=" " />
+				<CheckBox IsChecked="{Binding IncludePuttySessionsInList}" Content="Include putty sessions in list" />
+			</DockPanel>
+
+			<DockPanel>
+				<TextBlock Text=" " />
 				<CheckBox IsChecked="{Binding ShowPuttyButton}" Content="Show Putty button" />
 			</DockPanel>
 		</StackPanel>

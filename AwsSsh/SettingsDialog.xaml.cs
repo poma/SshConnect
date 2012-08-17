@@ -44,5 +44,6 @@ namespace AwsSsh
 		{
 			Process.Start((sender as FrameworkElement).Tag.ToString());
 		}
+
 	}
 }
