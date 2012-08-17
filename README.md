@@ -1,7 +1,7 @@
-AwsSsh 1.0 by Roman Semenov
-===========================
+AwsSsh 1.1
+==========
 
-A nice windows client that lets you quickly SSH to your Amazon EC2 instances. Has built-in search that helps a lot when you have many instances.
+A nice windows tool that lets you quickly SSH to your Amazon EC2 instances using Putty. Has built-in search that helps a lot when you have many instances.
 
 ![Screenshot](https://raw.github.com/poma/AwsSsh/master/Screenshots/Screenshot1.png)
 
@@ -14,10 +14,10 @@ Requirements
 For normal operation you will need:
 
 * [.NET Framework 4.0](http://www.microsoft.com/en-us/download/details.aspx?id=17851)
-* Your amazon access and secret keys (grab them [here](https://portal.aws.amazon.com/gp/aws/securityCredentials))
+* Your Amazon Web Services access and secret keys (grab them [here](https://portal.aws.amazon.com/gp/aws/securityCredentials))
 * Your private ssh key (.ppk)
 * Putty.exe (you can download it from [official site](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html))
 
-And don't forget to configure your region URL if it is not default (N. Virginia)
+And don't forget to configure your AWS region URL if it is not default (N. Virginia)
 
 Enjoy.
