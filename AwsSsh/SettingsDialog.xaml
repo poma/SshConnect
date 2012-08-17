@@ -25,6 +25,7 @@
 						</StackPanel.Resources>
 						<TextBlock Text="AWS Keys" Tag="https://portal.aws.amazon.com/gp/aws/securityCredentials" />
 						<TextBlock Text="Download putty" Tag="http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html" />
+						<TextBlock Text="Start putty" Tag="{Binding PuttyPath}" />
 						<TextBlock Text="Homepage" Tag="https://github.com/poma/AwsSsh" />
 					</StackPanel>
 					<Button Content="OK" Margin="12" Padding="25, 2" IsDefault="True" Click="OK_Click" HorizontalAlignment="Right" VerticalAlignment="Center" />
@@ -83,6 +84,11 @@
 			<DockPanel>
 				<TextBlock Text=" " />
 				<CheckBox IsChecked="{Binding CloseOnConnect}" Content="Close on connect" />
+			</DockPanel>
+
+			<DockPanel>
+				<TextBlock Text=" " />
+				<CheckBox IsChecked="{Binding ShowPuttyButton}" Content="Show Putty button" />
 			</DockPanel>
 		</StackPanel>
 	</DockPanel>

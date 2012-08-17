@@ -10,6 +10,7 @@ namespace AwsSsh
 	public class Instance : INotifyPropertyChanged
 	{
 		public string Id { get; set; }
+		public bool IsPuttyInstance { get; set; }
 
 		#region Properties
 		private string _name;

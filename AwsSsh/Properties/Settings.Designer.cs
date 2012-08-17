@@ -134,12 +134,36 @@ namespace AwsSsh.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool FirstRun {
+        public bool IsFirstTimeConfiguration {
             get {
-                return ((bool)(this["FirstRun"]));
+                return ((bool)(this["IsFirstTimeConfiguration"]));
             }
             set {
-                this["FirstRun"] = value;
+                this["IsFirstTimeConfiguration"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool NeedsUpgrade {
+            get {
+                return ((bool)(this["NeedsUpgrade"]));
+            }
+            set {
+                this["NeedsUpgrade"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowPuttyButton {
+            get {
+                return ((bool)(this["ShowPuttyButton"]));
+            }
+            set {
+                this["ShowPuttyButton"] = value;
             }
         }
     }

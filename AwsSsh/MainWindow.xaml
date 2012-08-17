@@ -32,6 +32,9 @@
 								<DataTrigger Binding="{Binding State}" Value="Terminated">
 									<Setter Property="Source" Value="/Resources/red.png" />
 								</DataTrigger>
+								<DataTrigger Binding="{Binding State}" Value="Unknown">
+									<Setter Property="Source" Value="/Resources/gray.png" />
+								</DataTrigger>
 							</Style.Triggers>
 							<Setter Property="Source" Value="/Resources/gray.png" />
 						</Style>
@@ -78,8 +81,9 @@
 	<Grid>
 		<DockPanel>
 			<DockPanel DockPanel.Dock="Top">
-				<Image Source="/Resources/settings.png" Opacity="0.5" Width="16" Height="16" MouseDown="Preferences_MouseDown" DockPanel.Dock="Right" Style="{StaticResource actionStyle}" ToolTip="Settings" />
-				<Grid DockPanel.Dock="Right" Width="16" Height="16" VerticalAlignment="Center">
+				<Image Source="/Resources/settings.png" Opacity="0.5" Width="16" Height="16" MouseDown="Preferences_MouseDown" DockPanel.Dock="Right" Style="{StaticResource actionStyle}" ToolTip="Settings" Margin="1, 0" />
+				<Image Source="/Resources/putty.png" Opacity="0.5" Width="16" Height="16" MouseDown="Putty_MouseDown" DockPanel.Dock="Right" Style="{StaticResource actionStyle}" ToolTip="Putty" Margin="1, 0" Visibility="{Binding SettingsBase.ShowPuttyButton, Converter={StaticResource boolToVis}}"  />
+				<Grid DockPanel.Dock="Right" Width="16" Height="16" VerticalAlignment="Center" Margin="1, 0">
 					<local:GifImage Width="16" Height="16" Panel.ZIndex="1" ToolTip="Updating..."
 									Uri="pack://application:,,,/Resources/throbber.gif"
 									Visibility="{Binding IsLoading, Converter={StaticResource boolToVis}}" 

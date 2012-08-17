@@ -6,6 +6,7 @@ namespace AwsSsh
 {
 	public enum InstatnceStates
 	{
+		Unknown = -1,
 		Pending = 0,
 		Running = 16,
 		ShuttingDown = 32,

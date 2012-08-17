@@ -14,15 +14,26 @@ namespace AwsSsh
 	/// </summary>
 	public partial class App : Application
 	{
+		private static Settings Settings
+		{
+			get { return Settings.Default; }
+		}
+
 		private void Application_Startup(object sender, StartupEventArgs e)
 		{
-			if (Settings.Default.FirstRun)
+			if (Settings.Default.NeedsUpgrade)
+			{
+				Settings.Upgrade();
+				Settings.NeedsUpgrade = false;
+				Settings.Save();
+			}
+			if (Settings.IsFirstTimeConfiguration && false)
 			{
 				ShutdownMode = ShutdownMode.OnExplicitShutdown;
 				var dialog = new SettingsDialog();
 				if (dialog.ShowDialog() == true)
 				{
-					Settings.Default.FirstRun = false;
+					Settings.IsFirstTimeConfiguration = false;
 					ShutdownMode = ShutdownMode.OnMainWindowClose;
 				}
 				else
@@ -43,22 +54,22 @@ namespace AwsSsh
 
 		private void Application_Exit(object sender, ExitEventArgs e)
 		{
-			Settings.Default.Save();
+			Settings.Save();
 		}
 
 		public static bool CheckConfig()
 		{
-			if (!File.Exists(Settings.Default.PuttyPath))
+			if (!File.Exists(Settings.PuttyPath))
 			{
 				MessageBox.Show("Putty not found. Please check your configuration", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 				return false;
 			}
-			if (!File.Exists(Settings.Default.KeyPath))
+			if (!File.Exists(Settings.KeyPath))
 			{
 				MessageBox.Show("Key file not found. Please check your configuration", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 				return false;
 			}
-			if (string.IsNullOrWhiteSpace(Settings.Default.AWSAccessKey) || string.IsNullOrWhiteSpace(Settings.Default.AWSAccessKey))
+			if (string.IsNullOrWhiteSpace(Settings.AWSAccessKey) || string.IsNullOrWhiteSpace(Settings.AWSAccessKey))
 			{
 				MessageBox.Show("Amazon security credentials are empty. Please check your configuration", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 				return false;

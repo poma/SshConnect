@@ -61,7 +61,7 @@ namespace AwsSsh
 		public static void MergeInstanceList(ObservableCollection<Instance> existingInstances, List<Instance> newInstances)
 		{
 			var c = new InstanceComparer();
-			var itemsToRemove = existingInstances.Except(newInstances, c).ToList();
+			var itemsToRemove = existingInstances.Except(newInstances, c).Where(a => !a.IsPuttyInstance).ToList();
 			var itemsToAdd = newInstances.Except(existingInstances, c).ToList();
 			var itemsToUpdate = existingInstances.Join(newInstances, a => a.Id, a => a.Id, (a, b) => new { Old = a, New = b }).ToList();
 			itemsToAdd.ForEach(a => existingInstances.Add(a));

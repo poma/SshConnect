@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using System.Xml.Serialization;
 using AwsSsh.Properties;
+using System.Configuration;
 
 namespace AwsSsh
 {
@@ -25,8 +26,17 @@ namespace AwsSsh
 		public const int BigStep = 20;
 
 		private DispatcherTimer _updateTimer;
+		private List<string> _puttySessions;
 
-		private static Settings Settings
+		internal Settings Settings
+		{
+			get { return Settings.Default; }
+		}
+
+		/// <summary>
+		/// Used for databinding
+		/// </summary>
+		public ApplicationSettingsBase SettingsBase
 		{
 			get { return Settings.Default; }
 		}
@@ -90,6 +100,7 @@ namespace AwsSsh
 		{
 			InitializeComponent();
 			LoadInstanceCache();
+			GetPuttySessions();
 			RefreshList();
 			Closing += (obj, args) => SaveInstanceCache();
 
@@ -102,10 +113,17 @@ namespace AwsSsh
 		}
 
 		//Methods are sorted by importance
-		public void RunPutty(string ip)
+		public void RunPuttyInstance(Instance instance)
 		{
-			if (string.IsNullOrEmpty(ip)) return; // offline instancces
-			string command = String.Format(@"-ssh {0} -l {1} -i ""{2}"" {3}", ip, Settings.DefaultUser, Settings.KeyPath, Settings.CommandLineArgs);
+			if (string.IsNullOrEmpty(instance.PublicDnsName)) return; // offline instancces
+			RunPutty(String.Format(@"-ssh {0} -l {1} -i ""{2}"" {3}", instance.PublicDnsName, Settings.DefaultUser, Settings.KeyPath, Settings.CommandLineArgs));
+		}
+		public void RunPuttySession(string sessionName)
+		{
+			RunPutty(String.Format("-load \"{0}\"", sessionName));
+		}
+		public void RunPutty(string command)
+		{
 			Process.Start(Settings.PuttyPath, command);
 			if (Settings.CloseOnConnect)
 				Close();
@@ -217,14 +235,30 @@ namespace AwsSsh
 				using (TextWriter textWriter = new StreamWriter(CacheFile))
 				{
 					XmlSerializer serializer = new XmlSerializer(typeof(List<Instance>));
-					serializer.Serialize(textWriter, Instances.ToList());
+					serializer.Serialize(textWriter, Instances.Where(a => !a.IsPuttyInstance).ToList());
 					textWriter.Close();
 				}
 			}
 			catch { } // I know that this is bad
 		}
 
-		private void Preferences_MouseDown(object sender, MouseButtonEventArgs e)
+		public void GetPuttySessions()
+		{
+			_puttySessions = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\SimonTatham\PuTTY\Sessions").GetSubKeyNames().ToList();
+			foreach (var s in _puttySessions)
+			{
+				var inst = new Instance
+				{
+					IsPuttyInstance = true,
+					State = InstatnceStates.Unknown,
+					StateName = "Unknown",
+					Name = s,
+					Id = s
+				};
+				Instances.Add(inst);
+			}
+		}
+        private void Preferences_MouseDown(object sender, MouseButtonEventArgs e)
 		{
 			new SettingsDialog().ShowDialog();
 		}
@@ -236,7 +270,14 @@ namespace AwsSsh
 		{
 			var item = listBox.SelectedItem as Instance;
 			if (item == null) return;
-			RunPutty(item.PublicDnsName);
+			if (item.IsPuttyInstance)
+				RunPuttySession(item.Id);
+			else
+				RunPuttyInstance(item);
+		}
+		private void Putty_MouseDown(object sender, MouseButtonEventArgs e)
+		{
+			Process.Start(Settings.PuttyPath);
 		}
 
 		private void RefreshButton_MouseDown(object sender, MouseButtonEventArgs e)
