@@ -22,7 +22,7 @@ namespace AwsSsh
 	{
 		#region Properties
 
-		public const string CacheFile = "cache.xml";
+		public static readonly string CacheFile = Path.Combine(Path.GetTempPath(), "AwsSsh.cache.xml");
 		public const int BigStep = 20;
 
 		private DispatcherTimer _updateTimer;
@@ -103,7 +103,7 @@ namespace AwsSsh
 			LoadInstanceCache();
 			GetPuttySessions();
 			RefreshList();
-			Closing += (obj, args) => SaveInstanceCache();
+			Closing += (obj, args) => { if (!App.DontSaveSettings) SaveInstanceCache(); };
 
 			// Just in case
 			new DispatcherTimer { IsEnabled = true, Interval = TimeSpan.FromMilliseconds(200) }

@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Diagnostics;
+using System.IO;
 
 namespace AwsSsh
 {
@@ -43,6 +44,17 @@ namespace AwsSsh
 		private void LinkClick(object sender, MouseButtonEventArgs e)
 		{
 			Process.Start((sender as FrameworkElement).Tag.ToString());
+		}
+
+		private void Clear_Click(object sender, RoutedEventArgs e)
+		{
+			if (MessageBox.Show("All your settings and cache will be cleared and application will shutdown", "Clear data", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
+			{
+				File.Delete(MainWindow.CacheFile);
+				// clear settings
+				App.DontSaveSettings = true;
+				App.Current.Shutdown();
+			}
 		}
 
 	}

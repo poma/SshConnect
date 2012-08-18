@@ -1,7 +1,7 @@
 ﻿<Window x:Class="AwsSsh.SettingsDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Settings" Height="auto" Width="528" SizeToContent="Height">
+        Title="Settings" Height="auto" Width="591" SizeToContent="Height">
 	<DockPanel Background="#EEEEF4">
 		<Border DockPanel.Dock="Bottom" BorderThickness="0, 1, 0, 0" BorderBrush="#787676" SnapsToDevicePixels="True">
 			<Border BorderThickness="0, 1, 0, 0" BorderBrush="#f1eeee" Background="#DBDBE0" SnapsToDevicePixels="True">
@@ -28,7 +28,10 @@
 						<TextBlock Text="Start putty" Tag="{Binding PuttyPath}" />
 						<TextBlock Text="Homepage" Tag="https://github.com/poma/AwsSsh" />
 					</StackPanel>
-					<Button Content="OK" Margin="12" Padding="25, 2" IsDefault="True" Click="OK_Click" HorizontalAlignment="Right" VerticalAlignment="Center" />
+					<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="12">
+						<Button Content="Clear data" Padding="15, 2" Click="Clear_Click" Margin="0, 0, 8, 0"  />
+						<Button Content="OK" Padding="25, 2" IsDefault="True" Click="OK_Click"  />
+					</StackPanel>					
 				</Grid>
 			</Border>
 		</Border>

@@ -1,11 +1,13 @@
-﻿using System;
+﻿using System;	
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Windows;
 using System.IO;
+using System.IO.Compression;
 using AwsSsh.Properties;
+using System.Reflection;
 
 namespace AwsSsh
 {
@@ -14,6 +16,8 @@ namespace AwsSsh
 	/// </summary>
 	public partial class App : Application
 	{
+		public static bool DontSaveSettings { get; set; }
+
 		private static Settings Settings
 		{
 			get { return Settings.Default; }
@@ -21,13 +25,15 @@ namespace AwsSsh
 
 		private void Application_Startup(object sender, StartupEventArgs e)
 		{
+			AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+
 			if (Settings.Default.NeedsUpgrade)
 			{
 				Settings.Upgrade();
 				Settings.NeedsUpgrade = false;
 				Settings.Save();
 			}
-			if (Settings.IsFirstTimeConfiguration && false)
+			if (Settings.IsFirstTimeConfiguration)
 			{
 				ShutdownMode = ShutdownMode.OnExplicitShutdown;
 				var dialog = new SettingsDialog();
@@ -54,7 +60,8 @@ namespace AwsSsh
 
 		private void Application_Exit(object sender, ExitEventArgs e)
 		{
-			Settings.Save();
+			if (!DontSaveSettings)
+				Settings.Save();
 		}
 
 		public static bool CheckConfig()
@@ -76,5 +83,27 @@ namespace AwsSsh
 			}
 			return true;
 		}
+
+
+		private static Assembly LoadEmbeddedDll(string name)
+        {
+			using (var stream = Application.GetResourceStream(new Uri(name, UriKind.Relative)).Stream)
+				using (var mem = new MemoryStream())
+				{
+					var gzip = new GZipStream(stream, CompressionMode.Decompress);
+					gzip.CopyTo(mem);
+					var buf = mem.ToArray();
+					return Assembly.Load(buf);
+				}
+        }
+
+		Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+		{
+			if (args.Name.Contains("AWSSDK")) 
+				return LoadEmbeddedDll("AWSSDK.dll.gz");
+			
+			return null;
+		}
+
 	}
 }
