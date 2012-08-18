@@ -28,10 +28,13 @@ namespace AwsSsh
 
 				foreach (var image in ec2Response.DescribeInstancesResult.Reservation.SelectMany(a => a.RunningInstance))
 				{
+					var nameTag = image.Tag.Where(t => t.Key == "Name").FirstOrDefault();
+					var name = nameTag != null ? nameTag.Value : image.InstanceId;
+
 					var instance = new Instance()
 					{
 						Id = image.InstanceId,
-						Name = image.Tag[0].Value,
+						Name = name,
 						StateName = image.InstanceState.Name,
 						State = (InstatnceStates)image.InstanceState.Code,
 						PublicIp = image.IpAddress,

@@ -54,14 +54,10 @@ namespace AwsSsh.ApplicationSettings
 				object val = RegistryKey.GetValue(p.Property.Name, p.Attribute.DefaultValue);
 				if (val != null)
 				{
-					try
-					{
-						if (p.Property.PropertyType == typeof(string)) val = val.ToString();
-						if (p.Property.PropertyType == typeof(int)) val = int.Parse(val.ToString());
-						if (p.Property.PropertyType == typeof(bool)) val = bool.Parse(val.ToString());
-						if (typeof(Enum).IsAssignableFrom(p.Property.PropertyType)) val = Enum.Parse(p.Property.PropertyType, val.ToString());
-					}
-					catch { }
+					if (p.Property.PropertyType == typeof(string)) val = val.ToString();
+					if (p.Property.PropertyType == typeof(int)) val = int.Parse(val.ToString());
+					if (p.Property.PropertyType == typeof(bool)) val = bool.Parse(val.ToString());
+					if (typeof(Enum).IsAssignableFrom(p.Property.PropertyType)) val = Enum.Parse(p.Property.PropertyType, val.ToString());
 					if (val != null)
 						p.Property.SetValue(this, val, null);
 				}
