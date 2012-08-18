@@ -6,7 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.IO;
 using System.IO.Compression;
-using AwsSsh.Properties;
+using AwsSsh.ApplicationSettings;
 using System.Reflection;
 
 namespace AwsSsh
@@ -18,21 +18,22 @@ namespace AwsSsh
 	{
 		public static bool DontSaveSettings { get; set; }
 
-		private static Settings Settings
+		private static Settings _settings;
+		public static Settings Settings
 		{
-			get { return Settings.Default; }
+			get 
+			{ 
+				if (_settings == null)
+					_settings = new Settings();
+				return _settings; 
+			}
 		}
 
 		private void Application_Startup(object sender, StartupEventArgs e)
 		{
 			AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+			Settings.Load();
 
-			if (Settings.Default.NeedsUpgrade)
-			{
-				Settings.Upgrade();
-				Settings.NeedsUpgrade = false;
-				Settings.Save();
-			}
 			if (Settings.IsFirstTimeConfiguration)
 			{
 				ShutdownMode = ShutdownMode.OnExplicitShutdown;

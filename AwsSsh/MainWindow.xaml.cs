@@ -10,7 +10,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
 using System.Xml.Serialization;
-using AwsSsh.Properties;
+using AwsSsh.ApplicationSettings;
 using System.Configuration;
 
 namespace AwsSsh
@@ -29,17 +29,9 @@ namespace AwsSsh
 
 		public List<string> PuttySessions { get; private set; }
 
-		internal Settings Settings
+		public Settings Settings
 		{
-			get { return Settings.Default; }
-		}
-
-		/// <summary>
-		/// Used for databinding
-		/// </summary>
-		public ApplicationSettingsBase SettingsBase
-		{
-			get { return Settings.Default; }
+			get { return App.Settings; }
 		}
 
         public bool isLoading;

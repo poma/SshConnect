@@ -1,45 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="AwsSsh.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">
   <Profiles />
-  <Settings>
-    <Setting Name="AWSAccessKey" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Put your access key here</Value>
-    </Setting>
-    <Setting Name="AWSSecretKey" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Put your secret key here</Value>
-    </Setting>
-    <Setting Name="ServiceUrl" Type="System.String" Scope="User">
-      <Value Profile="(Default)">https://us-east-1.ec2.amazonaws.com</Value>
-    </Setting>
-    <Setting Name="CloseOnConnect" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="DefaultUser" Type="System.String" Scope="User">
-      <Value Profile="(Default)">ubuntu</Value>
-    </Setting>
-    <Setting Name="CommandLineArgs" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="PuttyPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\putty.exe</Value>
-    </Setting>
-    <Setting Name="KeyPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\certificate.ppk</Value>
-    </Setting>
-    <Setting Name="UpdateInterval" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">10</Value>
-    </Setting>
-    <Setting Name="IsFirstTimeConfiguration" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="NeedsUpgrade" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="ShowPuttyButton" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="IncludePuttySessionsInList" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-  </Settings>
+  <Settings />
 </SettingsFile>

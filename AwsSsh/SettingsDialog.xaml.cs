@@ -23,7 +23,7 @@ namespace AwsSsh
 		public SettingsDialog()
 		{
 			InitializeComponent();
-			DataContext = Properties.Settings.Default;
+			DataContext = App.Settings;
 		}
 
 		private void OK_Click(object sender, RoutedEventArgs e)
@@ -51,7 +51,7 @@ namespace AwsSsh
 			if (MessageBox.Show("All your settings and cache will be cleared and application will shutdown", "Clear data", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
 			{
 				File.Delete(MainWindow.CacheFile);
-				// clear settings
+				App.Settings.Clear();
 				App.DontSaveSettings = true;
 				App.Current.Shutdown();
 			}

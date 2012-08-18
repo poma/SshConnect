@@ -19,9 +19,9 @@ namespace AwsSsh
 				var result = new List<Instance>();
 
 				AmazonEC2 ec2 = AWSClientFactory.CreateAmazonEC2Client(
-					Settings.Default.AWSAccessKey,
-					Settings.Default.AWSSecretKey,
-					new AmazonEC2Config { ServiceURL = Settings.Default.ServiceUrl }
+					App.Settings.AWSAccessKey,
+					App.Settings.AWSSecretKey,
+					new AmazonEC2Config { ServiceURL = App.Settings.ServiceUrl }
 					);
 
 				var ec2Response = ec2.DescribeInstances(new DescribeInstancesRequest());
@@ -75,9 +75,9 @@ namespace AwsSsh
 			try
 			{
 				AmazonEC2 ec2 = AWSClientFactory.CreateAmazonEC2Client(
-						Settings.Default.AWSAccessKey,
-						Settings.Default.AWSSecretKey,
-						new AmazonEC2Config { ServiceURL = Settings.Default.ServiceUrl }
+						App.Settings.AWSAccessKey,
+						App.Settings.AWSSecretKey,
+						new AmazonEC2Config { ServiceURL = App.Settings.ServiceUrl }
 						);
 
 				ec2.DescribeInstances(new DescribeInstancesRequest());
