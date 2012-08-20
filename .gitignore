@@ -2,3 +2,6 @@
 /AwsSsh/bin
 /AwsSsh.suo
 /AwsSsh/AwsSsh.csproj.user
+/_ReSharper.AwsSsh
+/AwsSsh.sln.DotSettings.user
+/AwsSsh/AwsSsh.csproj.DotSettings.user
