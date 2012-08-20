@@ -94,12 +94,12 @@ namespace AwsSsh
 				"Error Code: " + ex.ErrorCode + "\r\n" +
 				"Error Type: " + ex.ErrorType + "\r\n" +
 				"Request ID: " + ex.RequestId;
-				MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				ExceptionDialog.Show(new AmazonEC2Exception(message, ex));
 				return false;
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				ExceptionDialog.Show(ex);
 				return false;
 			}
 		}

@@ -31,6 +31,7 @@ namespace AwsSsh
 
 		private void Application_Startup(object sender, StartupEventArgs e)
 		{
+			DispatcherUnhandledException += ExceptionDialog.Handler;
 			AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 			Settings.Load();
 
@@ -53,12 +54,6 @@ namespace AwsSsh
 			new MainWindow().Show();
 		}
 
-		private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
-		{
-			MessageBox.Show(e.Exception.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
-			e.Handled = true;
-		}
-
 		private void Application_Exit(object sender, ExitEventArgs e)
 		{
 			if (!DontSaveSettings)
@@ -69,17 +64,17 @@ namespace AwsSsh
 		{
 			if (!File.Exists(Settings.PuttyPath))
 			{
-				MessageBox.Show("Putty not found. Please check your configuration", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				ExceptionDialog.Show("Putty not found. Please check your configuration");
 				return false;
 			}
 			if (!File.Exists(Settings.KeyPath))
 			{
-				MessageBox.Show("Key file not found. Please check your configuration", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				ExceptionDialog.Show("Key file not found. Please check your configuration");
 				return false;
 			}
 			if (string.IsNullOrWhiteSpace(Settings.AWSAccessKey) || string.IsNullOrWhiteSpace(Settings.AWSAccessKey))
 			{
-				MessageBox.Show("Amazon security credentials are empty. Please check your configuration", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				ExceptionDialog.Show("Amazon security credentials are empty. Please check your configuration");
 				return false;
 			}
 			return true;
