@@ -1,4 +1,4 @@
-AwsSsh 1.1
+AwsSsh 1.3
 ==========
 
 A nice windows tool that lets you quickly SSH to your Amazon EC2 instances using Putty. Has built-in search that helps a lot when you have many instances.
