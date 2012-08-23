@@ -41,9 +41,11 @@ namespace AwsSsh
 			}
 		}
 
-		private void LinkClick(object sender, MouseButtonEventArgs e)
+		private void LinkClick(object sender, RoutedEventArgs e)
 		{
-			Process.Start((sender as FrameworkElement).Tag.ToString());
+			string link = ((sender as FrameworkElement).Tag ?? "").ToString();
+			if (!string.IsNullOrEmpty(link))
+				Process.Start(link);
 		}
 
 		private void Clear_Click(object sender, RoutedEventArgs e)
@@ -55,6 +57,11 @@ namespace AwsSsh
 				App.DontSaveSettings = true;
 				App.Current.Shutdown();
 			}
+		}
+
+		private void showShareMenu(object sender, MouseButtonEventArgs e)
+		{
+			shareMenu.IsOpen = true;
 		}
 
 	}

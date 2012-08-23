@@ -149,6 +149,12 @@
     <Resource Include="Resources\putty.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\facebook.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\twitter.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="Resources\Error.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
