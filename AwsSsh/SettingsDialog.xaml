@@ -70,9 +70,14 @@
 			</DockPanel>
 
 			<DockPanel>
+				<TextBlock Text="Putty session:" />
+				<TextBox Text="{Binding PuttySession}" />
+			</DockPanel>
+
+			<DockPanel>
 				<TextBlock Text="Additional putty args:" />
 				<TextBox Text="{Binding CommandLineArgs}" />
-			</DockPanel>
+			</DockPanel>			
 
 			<DockPanel>
 				<TextBlock Text="Service URL:" />

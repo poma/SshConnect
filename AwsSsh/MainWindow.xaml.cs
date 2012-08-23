@@ -121,7 +121,8 @@ namespace AwsSsh
 		public void RunPuttyInstance(Instance instance)
 		{
 			if (string.IsNullOrEmpty(instance.PublicDnsName)) return; // offline instancces
-			RunPutty(String.Format(@"-ssh {0} -l {1} -i ""{2}"" {3}", instance.PublicDnsName, Settings.DefaultUser, Settings.KeyPath, Settings.CommandLineArgs));
+			var session = string.IsNullOrWhiteSpace(Settings.PuttySession) ? "" : String.Format("-load \"{0}\"", Settings.PuttySession);
+			RunPutty(String.Format(@"{0} -ssh {1} -l {2} -i ""{3}"" {4}", session, instance.PublicDnsName, Settings.DefaultUser, Settings.KeyPath, Settings.CommandLineArgs));
 		}
 		public void RunPuttySession(string sessionName)
 		{
@@ -162,7 +163,7 @@ namespace AwsSsh
 
 		private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
 		{
-			e.Accepted = (e.Item as Instance).Name.Contains(SearchText);
+			e.Accepted = (e.Item as Instance).Name.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0;
 		}
 
 		private void Window_PreviewKeyDown(object sender, KeyEventArgs e)

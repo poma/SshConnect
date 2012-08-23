@@ -25,6 +25,9 @@ namespace AwsSsh.ApplicationSettings
 		[DefaultValue("")]
 		public string CommandLineArgs { get; set; }
 
+		[DefaultValue("")]
+		public string PuttySession { get; set; }
+
 		[DefaultValue("C:\\putty.exe")]
 		public string PuttyPath { get; set; }
 
