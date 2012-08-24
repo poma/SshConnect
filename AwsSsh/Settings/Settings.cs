@@ -12,6 +12,18 @@ namespace AwsSsh.ApplicationSettings
 
 		[DefaultValue("Put your secret key here")]
 		public string AWSSecretKey { get; set; }
+		
+		[DefaultValue("C:\\certificate.ppk")]
+		public string KeyPath { get; set; }
+
+		[DefaultValue("C:\\putty.exe")]
+		public string PuttyPath { get; set; }
+
+		[DefaultValue("")]
+		public string PuttySession { get; set; }
+
+		[DefaultValue("")]
+		public string CommandLineArgs { get; set; }
 
 		[DefaultValue("https://us-east-1.ec2.amazonaws.com")]
 		public string ServiceUrl { get; set; }
@@ -21,18 +33,6 @@ namespace AwsSsh.ApplicationSettings
 
 		[DefaultValue("ubuntu")]
 		public string DefaultUser { get; set; }
-
-		[DefaultValue("")]
-		public string CommandLineArgs { get; set; }
-
-		[DefaultValue("")]
-		public string PuttySession { get; set; }
-
-		[DefaultValue("C:\\putty.exe")]
-		public string PuttyPath { get; set; }
-
-		[DefaultValue("C:\\certificate.ppk")]
-		public string KeyPath { get; set; }
 
 		[DefaultValue(10)]
 		public int UpdateInterval { get; set; }

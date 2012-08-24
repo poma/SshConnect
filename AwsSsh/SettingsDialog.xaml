@@ -63,27 +63,27 @@
 			</StackPanel.Resources>
 
 			<DockPanel>
-				<TextBlock Text="AWS Access key:" />
+				<TextBlock Text="AWS Access key:*" />
 				<TextBox Text="{Binding AWSAccessKey}" />
 			</DockPanel>
 
 			<DockPanel>
-				<TextBlock Text="AWS Secret key:" />
+				<TextBlock Text="AWS Secret key:*" />
 				<TextBox Text="{Binding AWSSecretKey}" />
 			</DockPanel>
 
 			<DockPanel>
-				<TextBlock Text="Path to key file:" />
+				<TextBlock Text="Path to key file:*" />
 				<TextBox Text="{Binding KeyPath}" />
 			</DockPanel>
 
 			<DockPanel>
-				<TextBlock Text="Path to putty.exe:" />
+				<TextBlock Text="Path to putty.exe:*" />
 				<TextBox Text="{Binding PuttyPath}" />
 			</DockPanel>
 
 			<DockPanel>
-				<TextBlock Text="Putty session:" />
+				<TextBlock Text="Putty 'base' session:" />
 				<TextBox Text="{Binding PuttySession}" />
 			</DockPanel>
 
