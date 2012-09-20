@@ -120,7 +120,7 @@ namespace AwsSsh
 		//Methods are sorted by importance
 		public void RunPuttyInstance(Instance instance)
 		{
-			if (string.IsNullOrEmpty(instance.PublicDnsName)) return; // offline instancces
+			if (string.IsNullOrEmpty(instance.PublicIp)) return; // offline instancces
 			var session = string.IsNullOrWhiteSpace(Settings.PuttySession) ? "" : String.Format("-load \"{0}\"", Settings.PuttySession);
 			RunPutty(String.Format(@"{0} -ssh {1} -l {2} -i ""{3}"" {4}", session, instance.PublicDnsName, Settings.DefaultUser, Settings.KeyPath, Settings.CommandLineArgs));
 		}
@@ -245,7 +245,18 @@ namespace AwsSsh
 					textWriter.Close();
 				}
 			}
-			catch { } // I know that this is bad
+			catch (Exception ex)
+			{
+				try
+				{
+					do
+					{
+						File.AppendAllText(CacheFile, String.Format("\r\n\r\n{0}\r\n{1}", ex.Message, ex.StackTrace));
+						ex = ex.InnerException;
+					} while (ex != null);
+				}
+				catch { } // I know that this is bad
+			}
 		}
 
 		public void GetPuttySessions()

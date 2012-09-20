@@ -43,6 +43,8 @@ namespace AwsSsh
 						PublicDnsName = image.PublicDnsName,
 						PrivateDnsName = image.PrivateDnsName
 					};
+					if (!Enum.IsDefined(typeof(InstatnceStates), instance.State)) 
+						instance.State = InstatnceStates.Unknown;
 					result.Add(instance);
 				}
 				return result.OrderBy(a => a.Name).ToList();

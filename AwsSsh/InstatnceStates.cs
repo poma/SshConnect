@@ -13,5 +13,6 @@ namespace AwsSsh
 		Terminated = 48,
 		Stopping = 64,
 		Stopped = 80,
+		//Failing = 272
 	}
 }

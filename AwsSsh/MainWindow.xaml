@@ -10,7 +10,7 @@
 	<Window.Resources>
 		<DataTemplate x:Key="instanceTemplate" >
 			<DockPanel ToolTip="{Binding Tooltip}">
-				<Image Width="10" Height="10" Margin="4, 0" ToolTip="{Binding StateName}" RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased" DockPanel.Dock="Left">
+				<Image Width="10" Height="10" Margin="4, 0" ToolTip="{Binding StateName}" RenderOptions.BitmapScalingMode="NearestNeighbor" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" DockPanel.Dock="Left">
 					<Image.Style>
 						<Style TargetType="Image">
 							<Style.Triggers>
