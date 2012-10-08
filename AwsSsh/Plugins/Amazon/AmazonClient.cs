@@ -12,11 +12,11 @@ namespace AwsSsh
 {
 	public static class AmazonClient
 	{
-		public static List<Instance> GetInstances()
+		public static List<AmazonInstance> GetInstances()
 		{
 			try
 			{
-				var result = new List<Instance>();
+				var result = new List<AmazonInstance>();
 
 				AmazonEC2 ec2 = AWSClientFactory.CreateAmazonEC2Client(
 					App.Settings.AWSAccessKey,
@@ -31,7 +31,7 @@ namespace AwsSsh
 					var nameTag = image.Tag.Where(t => t.Key == "Name").FirstOrDefault();
 					var name = nameTag != null ? nameTag.Value : image.InstanceId;
 
-					var instance = new Instance()
+					var instance = new AmazonInstance()
 					{
 						Id = image.InstanceId,
 						Name = name,
@@ -63,15 +63,15 @@ namespace AwsSsh
 		/// <summary>
 		/// Used to merge new instance info but retain references
 		/// </summary>
-		public static void MergeInstanceList(ObservableCollection<Instance> existingInstances, List<Instance> newInstances)
+		public static void MergeInstanceList(ObservableCollection<AmazonInstance> existingInstances, List<AmazonInstance> newInstances)
 		{
-			var c = new InstanceComparer();
+			var c = new AmazonInstanceComparer();
 			var itemsToRemove = existingInstances.Except(newInstances, c).Where(a => !a.IsPuttyInstance).ToList();
 			var itemsToAdd = newInstances.Except(existingInstances, c).ToList();
 			var itemsToUpdate = existingInstances.Join(newInstances, a => a.Id, a => a.Id, (a, b) => new { Old = a, New = b }).ToList();
 			itemsToAdd.ForEach(a => existingInstances.Add(a));
 			itemsToRemove.ForEach(a => existingInstances.Remove(a));
-			itemsToUpdate.ForEach(a => Instance.AssignInstance(a.Old, a.New));
+			itemsToUpdate.ForEach(a => AmazonInstance.AssignInstance(a.Old, a.New));
 		}
 
 		public static bool CheckConnection()

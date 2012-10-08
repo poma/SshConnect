@@ -4,14 +4,14 @@ using System.Collections.Generic;
 
 namespace AwsSsh
 {
-	public class InstanceComparer : IEqualityComparer<Instance>
+	public class AmazonInstanceComparer : IEqualityComparer<AmazonInstance>
 	{
-		public bool Equals(Instance x, Instance y)
+		public bool Equals(AmazonInstance x, AmazonInstance y)
 		{
 			return x != null && y != null && x.Id == y.Id;
 		}
 
-		public int GetHashCode(Instance obj)
+		public int GetHashCode(AmazonInstance obj)
 		{
 			return obj.Id.GetHashCode();
 		}

@@ -62,9 +62,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Plugins\Amazon\AmazonInstance.cs" />
     <Compile Include="ExceptionDialog.xaml.cs">
       <DependentUpon>ExceptionDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="InstanceSource.cs" />
+    <Compile Include="Plugins\Amazon\AmazonInstanceSource.cs" />
+    <Compile Include="Plugins\Putty\PuttyInstance.cs" />
+    <Compile Include="Plugins\Putty\PuttyInstanceSource.cs" />
+    <Compile Include="StateColor.cs" />
     <Compile Include="XmlUtils.cs" />
     <Compile Include="Settings\DefaultValueAttribute.cs" />
     <Compile Include="Settings\Settings.cs" />
@@ -80,14 +86,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="AmazonClient.cs" />
+    <Compile Include="Plugins\Amazon\AmazonClient.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="GifImage.cs" />
     <Compile Include="Instance.cs" />
-    <Compile Include="InstanceComparer.cs" />
+    <Compile Include="Plugins\Amazon\AmazonInstanceComparer.cs" />
     <Compile Include="InstatnceStates.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -156,6 +162,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Error.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Plugins\Chef\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

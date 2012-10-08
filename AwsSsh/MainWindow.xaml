@@ -14,25 +14,16 @@
 					<Image.Style>
 						<Style TargetType="Image">
 							<Style.Triggers>
-								<DataTrigger Binding="{Binding State}" Value="Running">
+								<DataTrigger Binding="{Binding StateColor}" Value="Green">
 									<Setter Property="Source" Value="/Resources/green.png" />
 								</DataTrigger>
-								<DataTrigger Binding="{Binding State}" Value="Pending">
+								<DataTrigger Binding="{Binding StateColor}" Value="Yellow">
 									<Setter Property="Source" Value="/Resources/yellow.png" />
 								</DataTrigger>
-								<DataTrigger Binding="{Binding State}" Value="ShuttingDown">
-									<Setter Property="Source" Value="/Resources/yellow.png" />
-								</DataTrigger>
-								<DataTrigger Binding="{Binding State}" Value="Stopping">
-									<Setter Property="Source" Value="/Resources/yellow.png" />
-								</DataTrigger>
-								<DataTrigger Binding="{Binding State}" Value="Stopped">
+								<DataTrigger Binding="{Binding StateColor}" Value="Red">
 									<Setter Property="Source" Value="/Resources/red.png" />
 								</DataTrigger>
-								<DataTrigger Binding="{Binding State}" Value="Terminated">
-									<Setter Property="Source" Value="/Resources/red.png" />
-								</DataTrigger>
-								<DataTrigger Binding="{Binding State}" Value="Unknown">
+								<DataTrigger Binding="{Binding StateColor}" Value="Grey">
 									<Setter Property="Source" Value="/Resources/gray.png" />
 								</DataTrigger>
 							</Style.Triggers>

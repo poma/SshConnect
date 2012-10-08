@@ -9,14 +9,13 @@ namespace AwsSsh
 	[Serializable]
 	public class Instance : INotifyPropertyChanged
 	{
-		public string Id { get; set; }
-		public bool IsPuttyInstance { get; set; }
-
-		#region Properties
 		private string _name;
 		public string Name
 		{
-			get { return _name; }
+			get
+			{
+				return _name;
+			}
 			set
 			{
 				if (_name == value) return;
@@ -28,7 +27,10 @@ namespace AwsSsh
 		private string _stateName;
 		public string StateName
 		{
-			get { return _stateName; }
+			get
+			{
+				return _stateName;
+			}
 			set
 			{
 				if (_stateName == value) return;
@@ -37,106 +39,40 @@ namespace AwsSsh
 			}
 		}
 
-		private InstatnceStates _state;
-		public InstatnceStates State
+		private StateColor _stateColor;
+		public StateColor StateColor
 		{
-			get { return _state; }
+			get { return _stateColor; }
 			set
 			{
-				if (_state == value) return;
-				_state = value;
-				OnPropertyChanged("State");
+				if (_stateColor == value) return;
+				_stateColor = value;
+				OnPropertyChanged("StateColor");
 			}
 		}
+		
 
-		private string _publicIp;
-		public string PublicIp
+		private string _endpoint;
+		public string Endpoint
 		{
-			get { return _publicIp; }
+			get { return _endpoint; }
 			set
 			{
-				if (_publicIp == value) return;
-				_publicIp = value;
-				OnPropertyChanged("PublicIp");
+				if (_endpoint == value) return;
+				_endpoint = value;
+				OnPropertyChanged("Endpoint");
 			}
 		}
+		
 
-		private string _privateIp;
-		public string PrivateIp
+		public virtual string Tooltip
 		{
-			get { return _privateIp; }
-			set
-			{
-				if (_privateIp == value) return;
-				_privateIp = value;
-				OnPropertyChanged("PrivateIp");
-			}
-		}
-        
-
-		private string _instanceType;
-		public string InstanceType
-		{
-			get { return _instanceType; }
-			set
-			{
-				if (_instanceType == value) return;
-				_instanceType = value;
-				OnPropertyChanged("InstanceType");
-			}
+			get { return "Endpoint: " + Endpoint; }
 		}
 
-		private string _publicDnsName;
-		public string PublicDnsName
+		public bool Run()
 		{
-			get { return _publicDnsName; }
-			set
-			{
-				if (_publicDnsName == value) return;
-				_publicDnsName = value;
-				OnPropertyChanged("PublicDnsName");
-			}
-		}
-
-		private string _privateDnsName;
-		public string PrivateDnsName
-		{
-			get { return _privateDnsName; }
-			set
-			{
-				if (_privateDnsName == value) return;
-				_privateDnsName = value;
-				OnPropertyChanged("PrivateDnsName");
-			}
-		}
-        
-
-		#endregion
-
-		public string Tooltip 
-		{
-			get
-			{
-				if (IsPuttyInstance)
-					return "Putty saved session";
-				else
-					return String.Format("Instance Type: {0}\n\nAddresses:\nPublic IP: {1}\nPrivate IP: {2}\nPublic DNS: {3}\nPrivate DNS: {4}", InstanceType, PublicIp, PrivateIp, PublicDnsName, PrivateDnsName);
-			}
-		}
-
-		/// <summary>
-		/// Used to merge new instance info but retain references
-		/// </summary>
-		public static void AssignInstance(Instance Src, Instance New)
-		{
-			Src.Name = New.Name;
-			Src.StateName = New.StateName;
-			Src.State = New.State;
-			Src.PublicIp = New.PublicIp;
-			Src.PrivateIp = New.PrivateIp;
-			Src.InstanceType = New.InstanceType;
-			Src.PublicDnsName = New.PublicDnsName;
-			Src.PrivateDnsName = New.PrivateDnsName;
+			return true;
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

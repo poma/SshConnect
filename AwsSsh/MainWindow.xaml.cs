@@ -12,6 +12,7 @@ using System.Windows.Threading;
 using System.Xml.Serialization;
 using AwsSsh.ApplicationSettings;
 using System.Configuration;
+using AwsSsh.Plugins.Amazon;
 
 namespace AwsSsh
 {
@@ -27,14 +28,12 @@ namespace AwsSsh
 
 		private DispatcherTimer _updateTimer;
 
-		public List<string> PuttySessions { get; private set; }
-
 		public Settings Settings
 		{
 			get { return App.Settings; }
 		}
 
-        public bool isLoading;
+        private bool isLoading;
 		public bool IsLoading
 		{
 			get { return isLoading; }
@@ -43,17 +42,6 @@ namespace AwsSsh
 				if (isLoading == value) return;
 				isLoading = value;
 				OnPropertyChanged("IsLoading");
-			}
-		}
-
-		public ObservableCollection<Instance> _instances;
-		public ObservableCollection<Instance> Instances
-		{
-			get
-			{
-				if (_instances == null)
-					_instances = new ObservableCollection<Instance>();
-				return _instances;
 			}
 		}
 
@@ -71,6 +59,29 @@ namespace AwsSsh
 				OnPropertyChanged("SearchText");
 			}
 		}
+
+		public ObservableCollection<Instance> _instances;
+		public ObservableCollection<Instance> Instances
+		{
+			get
+			{
+				if (_instances == null)
+					_instances = new ObservableCollection<Instance>();
+				return _instances;
+			}
+		}
+
+		private List<InstanceSource> _instanceSources;
+		public List<InstanceSource> InstanceSources
+		{
+			get { return _instanceSources; }
+			set
+			{
+				if (_instanceSources == value) return;
+				_instanceSources = value;
+				OnPropertyChanged("InstanceSources");
+			}
+		}		
 
 		private CollectionViewSource _instanceCollectionView;
 		public CollectionViewSource InstanceCollectionView
@@ -92,9 +103,14 @@ namespace AwsSsh
 		public MainWindow()
 		{
 			InitializeComponent();
+			InstanceSources = new List<InstanceSource>
+			{
+				new AmazonInstanceSource()
+			};
+
+			// todo: wrap exceptions
 			LoadInstanceCache();
-			GetPuttySessions();
-			RefreshList();
+			InstanceSources.ForEach(s => s.RefreshList(Instances));
 			Closing += (obj, args) => { if (!App.DontSaveSettings) SaveInstanceCache(); };
 
 			// Just in case
@@ -103,62 +119,58 @@ namespace AwsSsh
 
 			_updateTimer = new DispatcherTimer { IsEnabled = true, Interval = TimeSpan.FromSeconds(Settings.UpdateInterval) };
 			_updateTimer.Tick += (obj, args) => { RefreshList(); };
-
-			Settings.PropertyChanged += Settings_PropertyChanged;
 		}
 
-		void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
-		{
-			if (e.PropertyName == "IncludePuttySessionsInList")
-			{
-				Instances.Where(a => a.IsPuttyInstance).ToList().ForEach(a => Instances.Remove(a));
-				if (Settings.IncludePuttySessionsInList)
-					GetPuttySessions();
-			}
-		}
 
 		//Methods are sorted by importance
-		public void RunPuttyInstance(Instance instance)
+		//public void RunPuttyInstance(AnazonInstance instance)
+		//{
+		//	if (string.IsNullOrEmpty(instance.PublicIp)) return; // offline instancces
+		//	var session = string.IsNullOrWhiteSpace(Settings.PuttySession) ? "" : String.Format("-load \"{0}\"", Settings.PuttySession);
+		//	RunPutty(String.Format(@"{0} -ssh {1} -l {2} -i ""{3}"" {4}", session, instance.PublicIp, Settings.DefaultUser, Settings.KeyPath, Settings.CommandLineArgs));
+		//}
+		//public void RunPuttySession(string sessionName)
+		//{
+		//	RunPutty(String.Format("-load \"{0}\"", sessionName));
+		//}
+		//public void RunPutty(string command)
+		//{
+		//	Process.Start(Settings.PuttyPath, command);
+		//	if (Settings.CloseOnConnect)
+		//		Close();
+		//}
+
+		public void RunInstance(Instance instance)
 		{
-			if (string.IsNullOrEmpty(instance.PublicIp)) return; // offline instancces
-			var session = string.IsNullOrWhiteSpace(Settings.PuttySession) ? "" : String.Format("-load \"{0}\"", Settings.PuttySession);
-			RunPutty(String.Format(@"{0} -ssh {1} -l {2} -i ""{3}"" {4}", session, instance.PublicDnsName, Settings.DefaultUser, Settings.KeyPath, Settings.CommandLineArgs));
-		}
-		public void RunPuttySession(string sessionName)
-		{
-			RunPutty(String.Format("-load \"{0}\"", sessionName));
-		}
-		public void RunPutty(string command)
-		{
-			Process.Start(Settings.PuttyPath, command);
-			if (Settings.CloseOnConnect)
+			var success = instance.Run();
+			if (success && Settings.CloseOnConnect)
 				Close();
 		}
 
 		public void RefreshList()
 		{
-			BackgroundWorker w = new BackgroundWorker();
-			IsLoading = true;
-			w.DoWork += (obj, args) => args.Result = AmazonClient.GetInstances();
-			w.RunWorkerCompleted += (obj, args) =>
-			{
-				IsLoading = false;
-				if (args.Error != null)
-				{
-					_updateTimer.IsEnabled = false;
-					throw new Exception("Error downloading server list: " + args.Error.Message, args.Error);
-				}
-				var newInstances = args.Result as List<Instance>;
-				var previousSelection = listBox.SelectedItem as Instance;
-				using (InstanceCollectionView.DeferRefresh())
-					AmazonClient.MergeInstanceList(Instances, newInstances);
-				if (listBox.Items.Count > 0)
-					if (previousSelection != null && listBox.Items.Contains(previousSelection))
-						listBox.SelectedItem = previousSelection;
-					else
-						listBox.SelectedIndex = 0;
-			};
-			w.RunWorkerAsync();			
+			//BackgroundWorker w = new BackgroundWorker();
+			//IsLoading = true;
+			//w.DoWork += (obj, args) => args.Result = AmazonClient.GetInstances();
+			//w.RunWorkerCompleted += (obj, args) =>
+			//{
+			//	IsLoading = false;
+			//	if (args.Error != null)
+			//	{
+			//		_updateTimer.IsEnabled = false;
+			//		throw new Exception("Error downloading server list: " + args.Error.Message, args.Error);
+			//	}
+			//	var newInstances = args.Result as List<AnazonInstance>;
+			//	var previousSelection = listBox.SelectedItem as AnazonInstance;
+			//	using (InstanceCollectionView.DeferRefresh())
+			//		AmazonClient.MergeInstanceList(Instances, newInstances);
+			//	if (listBox.Items.Count > 0)
+			//		if (previousSelection != null && listBox.Items.Contains(previousSelection))
+			//			listBox.SelectedItem = previousSelection;
+			//		else
+			//			listBox.SelectedIndex = 0;
+			//};
+			//w.RunWorkerAsync();			
 		}
 
 		private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
@@ -224,7 +236,7 @@ namespace AwsSsh
 			{
 				using (TextReader textReader = new StreamReader(CacheFile))
 				{
-					XmlSerializer deserializer = new XmlSerializer(typeof(List<Instance>));
+					XmlSerializer deserializer = new XmlSerializer(typeof(List<Instance>), InstanceSources.SelectMany(s => s.SerializedTypes).ToArray());
 					var instances = (List<Instance>)deserializer.Deserialize(textReader);
 					textReader.Close();
 					instances.ForEach(a => Instances.Add(a));
@@ -240,8 +252,8 @@ namespace AwsSsh
 			{
 				using (TextWriter textWriter = new StreamWriter(CacheFile))
 				{
-					XmlSerializer serializer = new XmlSerializer(typeof(List<Instance>));
-					serializer.Serialize(textWriter, Instances.Where(a => !a.IsPuttyInstance).ToList());
+					XmlSerializer serializer = new XmlSerializer(typeof(List<Instance>), InstanceSources.SelectMany(s => s.SerializedTypes).ToArray());
+					serializer.Serialize(textWriter, Instances);
 					textWriter.Close();
 				}
 			}
@@ -259,23 +271,6 @@ namespace AwsSsh
 			}
 		}
 
-		public void GetPuttySessions()
-		{
-			PuttySessions = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\SimonTatham\PuTTY\Sessions").GetSubKeyNames().ToList();
-			if (!Settings.IncludePuttySessionsInList) return;
-			foreach (var s in PuttySessions)
-			{
-				var inst = new Instance
-				{
-					IsPuttyInstance = true,
-					State = InstatnceStates.Unknown,
-					StateName = "Unknown",
-					Name = s,
-					Id = s
-				};
-				Instances.Add(inst);
-			}
-		}
         private void Preferences_MouseDown(object sender, MouseButtonEventArgs e)
 		{
 			new SettingsDialog().ShowDialog();
@@ -288,10 +283,7 @@ namespace AwsSsh
 		{
 			var item = listBox.SelectedItem as Instance;
 			if (item == null) return;
-			if (item.IsPuttyInstance)
-				RunPuttySession(item.Id);
-			else
-				RunPuttyInstance(item);
+			RunInstance(item);
 		}
 		private void Putty_MouseDown(object sender, MouseButtonEventArgs e)
 		{
