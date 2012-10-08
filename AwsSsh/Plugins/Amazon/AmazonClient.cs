@@ -36,15 +36,13 @@ namespace AwsSsh
 						Id = image.InstanceId,
 						Name = name,
 						StateName = image.InstanceState.Name,
-						State = (InstatnceStates)image.InstanceState.Code,
+						State = (AmazonInstatnceStates)image.InstanceState.Code,
 						PublicIp = image.IpAddress,
 						PrivateIp = image.PrivateIpAddress,
 						InstanceType = image.InstanceType,
 						PublicDnsName = image.PublicDnsName,
 						PrivateDnsName = image.PrivateDnsName
 					};
-					if (!Enum.IsDefined(typeof(InstatnceStates), instance.State)) 
-						instance.State = InstatnceStates.Unknown;
 					result.Add(instance);
 				}
 				return result.OrderBy(a => a.Name).ToList();
@@ -63,12 +61,13 @@ namespace AwsSsh
 		/// <summary>
 		/// Used to merge new instance info but retain references
 		/// </summary>
-		public static void MergeInstanceList(ObservableCollection<AmazonInstance> existingInstances, List<AmazonInstance> newInstances)
+		public static void MergeInstanceList(ObservableCollection<Instance> existingInstances, List<AmazonInstance> newInstances)
 		{
 			var c = new AmazonInstanceComparer();
-			var itemsToRemove = existingInstances.Except(newInstances, c).Where(a => !a.IsPuttyInstance).ToList();
-			var itemsToAdd = newInstances.Except(existingInstances, c).ToList();
-			var itemsToUpdate = existingInstances.Join(newInstances, a => a.Id, a => a.Id, (a, b) => new { Old = a, New = b }).ToList();
+			//var itemsToRemove = existingInstances.Except(newInstances, c).Where(a => !a.IsPuttyInstance).ToList();
+			var itemsToRemove = existingInstances.OfType<AmazonInstance>().Except(newInstances, c).OfType<AmazonInstance>().ToList();
+			var itemsToAdd = newInstances.Except(existingInstances.OfType<AmazonInstance>(), c).ToList();
+			var itemsToUpdate = existingInstances.OfType<AmazonInstance>().Join(newInstances, a => a.Id, a => a.Id, (a, b) => new { Old = a, New = b }).ToList();
 			itemsToAdd.ForEach(a => existingInstances.Add(a));
 			itemsToRemove.ForEach(a => existingInstances.Remove(a));
 			itemsToUpdate.ForEach(a => AmazonInstance.AssignInstance(a.Old, a.New));

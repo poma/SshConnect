@@ -6,6 +6,9 @@ namespace AwsSsh
 {
 	public enum StateColor
 	{
-		Green, Yellow, Red, Gray
+		Green, 
+		Yellow, 
+		Red, 
+		Gray
 	}
 }

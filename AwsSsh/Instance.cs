@@ -3,6 +3,8 @@ using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
+using System.Diagnostics;
+using System.Windows;
 
 namespace AwsSsh
 {
@@ -10,7 +12,7 @@ namespace AwsSsh
 	public class Instance : INotifyPropertyChanged
 	{
 		private string _name;
-		public string Name
+		public virtual string Name
 		{
 			get
 			{
@@ -24,8 +26,8 @@ namespace AwsSsh
 			}
 		}
 
-		private string _stateName;
-		public string StateName
+		private string _stateName = "Unknown";
+		public virtual string StateName
 		{
 			get
 			{
@@ -39,8 +41,8 @@ namespace AwsSsh
 			}
 		}
 
-		private StateColor _stateColor;
-		public StateColor StateColor
+		private StateColor _stateColor = StateColor.Gray;
+		public virtual StateColor StateColor
 		{
 			get { return _stateColor; }
 			set
@@ -50,33 +52,24 @@ namespace AwsSsh
 				OnPropertyChanged("StateColor");
 			}
 		}
-		
-
-		private string _endpoint;
-		public string Endpoint
-		{
-			get { return _endpoint; }
-			set
-			{
-				if (_endpoint == value) return;
-				_endpoint = value;
-				OnPropertyChanged("Endpoint");
-			}
-		}
-		
 
 		public virtual string Tooltip
 		{
-			get { return "Endpoint: " + Endpoint; }
+			get { return null; }
 		}
 
-		public bool Run()
+		public virtual bool Run()
 		{
 			return true;
 		}
 
+		protected void RunPutty(string args)
+		{
+			Process.Start(App.Settings.PuttyPath, args);
+		}
+
 		public event PropertyChangedEventHandler PropertyChanged;
-		public virtual void OnPropertyChanged(string property)
+		protected virtual void OnPropertyChanged(string property)
 		{
 			if (PropertyChanged != null)
 				PropertyChanged(this, new PropertyChangedEventArgs(property));

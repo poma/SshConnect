@@ -8,14 +8,14 @@ namespace AwsSsh
 {
 	public class InstanceSource
 	{
-		public virtual void RefreshList(ObservableCollection<Instance> list)
+		public virtual List<Instance> GetInstanceList()
 		{
-			
+			return null;
 		}
 
-		public virtual Type[] SerializedTypes
+		public virtual void MergeInstanceList(ObservableCollection<Instance> src, List<Instance> newList)
 		{
-			get { return new Type[] { typeof(AmazonInstance) }; }
+			
 		}
 	}
 }

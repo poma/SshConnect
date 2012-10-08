@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace AwsSsh
 {
-	public enum InstatnceStates
+	public enum AmazonInstatnceStates
 	{
 		Unknown = -1,
 		Pending = 0,

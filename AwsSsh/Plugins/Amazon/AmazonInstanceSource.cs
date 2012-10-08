@@ -8,9 +8,15 @@ namespace AwsSsh.Plugins.Amazon
 {
 	public class AmazonInstanceSource : InstanceSource
 	{
-		public override void RefreshList(ObservableCollection<Instance> list)
+		public override List<Instance> GetInstanceList()
 		{
-			base.RefreshList(list);
+			return AmazonClient.GetInstances().OfType<Instance>().ToList();
+		}
+
+		public override void MergeInstanceList(ObservableCollection<Instance> src, List<Instance> theNewList)
+		{
+			var newList = theNewList.OfType<AmazonInstance>().ToList();
+			AmazonClient.MergeInstanceList(src, newList);
 		}
 	}
 }

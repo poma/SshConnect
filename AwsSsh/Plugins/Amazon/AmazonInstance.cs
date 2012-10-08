@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace AwsSsh
 {
@@ -8,18 +9,22 @@ namespace AwsSsh
 	public class AmazonInstance : Instance
 	{
 		public string Id { get; set; }
-		public bool IsPuttyInstance { get; set; }
 
 		#region Properties
 
-		private InstatnceStates _state;
-		public InstatnceStates State
+		private AmazonInstatnceStates _state;
+		public AmazonInstatnceStates State
 		{
 			get { return _state; }
 			set
 			{
 				if (_state == value) return;
-				_state = value;
+
+				if (Enum.IsDefined(typeof(AmazonInstatnceStates), value)) 
+					_state = value;
+				else
+					_state = AmazonInstatnceStates.Unknown;
+				
 				UpdateStateColor();
 				OnPropertyChanged("State");
 			}
@@ -32,7 +37,6 @@ namespace AwsSsh
 			set
 			{
 				if (_publicIp == value) return;
-				Endpoint = value;
 				_publicIp = value;
 				OnPropertyChanged("PublicIp");
 			}
@@ -90,14 +94,19 @@ namespace AwsSsh
 
 		#endregion
 
+		public override bool Run()
+		{
+			if (string.IsNullOrEmpty(PublicIp)) return false; // offline instancces
+			var session = string.IsNullOrWhiteSpace(App.Settings.PuttySession) ? "" : String.Format("-load \"{0}\"", App.Settings.PuttySession);
+			RunPutty(String.Format(@"{0} -ssh {1} -l {2} -i ""{3}"" {4}", session, PublicIp, App.Settings.DefaultUser, App.Settings.KeyPath, App.Settings.CommandLineArgs));
+			return true;
+		}
+
 		public override string Tooltip
 		{
 			get
 			{
-				if (IsPuttyInstance)
-					return "Putty saved session";
-				else
-					return String.Format("Instance Type: {0}\n\nAddresses:\nPublic IP: {1}\nPrivate IP: {2}\nPublic DNS: {3}\nPrivate DNS: {4}", InstanceType, PublicIp, PrivateIp, PublicDnsName, PrivateDnsName);
+				return String.Format("Instance Type: {0}\n\nAddresses:\nPublic IP: {1}\nPrivate IP: {2}\nPublic DNS: {3}\nPrivate DNS: {4}", InstanceType, PublicIp, PrivateIp, PublicDnsName, PrivateDnsName);
 			}
 		}
 
@@ -120,14 +129,14 @@ namespace AwsSsh
 		{
 			switch (State)
 			{
-				case InstatnceStates.Unknown: StateColor = AwsSsh.StateColor.Gray; break;
-				case InstatnceStates.Pending: StateColor = AwsSsh.StateColor.Yellow; break;
-				case InstatnceStates.Running: StateColor = AwsSsh.StateColor.Green; break;
-				case InstatnceStates.ShuttingDown: StateColor = AwsSsh.StateColor.Yellow; break;
-				case InstatnceStates.Terminated: StateColor = AwsSsh.StateColor.Red; break;
-				case InstatnceStates.Stopping: StateColor = AwsSsh.StateColor.Red; break;
-				case InstatnceStates.Stopped: StateColor = AwsSsh.StateColor.Red; break;
-				default: throw new InvalidOperationException("Unknown state");
+				case AmazonInstatnceStates.Unknown: StateColor = AwsSsh.StateColor.Gray; break;
+				case AmazonInstatnceStates.Pending: StateColor = AwsSsh.StateColor.Yellow; break;
+				case AmazonInstatnceStates.Running: StateColor = AwsSsh.StateColor.Green; break;
+				case AmazonInstatnceStates.ShuttingDown: StateColor = AwsSsh.StateColor.Yellow; break;
+				case AmazonInstatnceStates.Terminated: StateColor = AwsSsh.StateColor.Red; break;
+				case AmazonInstatnceStates.Stopping: StateColor = AwsSsh.StateColor.Red; break;
+				case AmazonInstatnceStates.Stopped: StateColor = AwsSsh.StateColor.Red; break;
+				default: Trace.TraceWarning("Unknown instance state " + State); break;
 			}
 		}
 	}

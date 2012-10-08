@@ -52,7 +52,7 @@ namespace AwsSsh
 		{
 			if (MessageBox.Show("All your settings and cache will be cleared and application will shutdown", "Clear data", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
 			{
-				File.Delete(MainWindow.CacheFile);
+				File.Delete(InstanceCollection.CacheFile);
 				App.Settings.Clear();
 				App.DontSaveSettings = true;
 				App.Current.Shutdown();
