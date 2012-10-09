@@ -21,6 +21,8 @@ namespace AwsSsh
 {
 	public class MainWindowViewModel : ObservableObject
 	{
+		public static MainWindowViewModel instance;
+
 		#region Properties
 
 		private InstanceCollection _instanceCollection;
@@ -94,6 +96,7 @@ namespace AwsSsh
 
 		public MainWindowViewModel()
 		{
+			instance = this;
 			_instanceCollection = new InstanceCollection();
 
 			if (!InstanceCollectionView.View.IsEmpty)
@@ -113,6 +116,9 @@ namespace AwsSsh
 		public ICommand ExecuteCurrentCommand { get { return new RelayCommand(ConnectToCurrentServer); } }
 		public ICommand StartPuttyCommand { get { return new RelayCommand(StartPutty); } }
 		public ICommand RefreshListCommand { get { return new RelayCommand(DoRefreshList); } }
+		public ICommand CopyCurrentCommand { get { return new RelayCommand(CopyCurrent); } }
+
+		
 
 
 		public void ShowPreferences()
@@ -145,6 +151,11 @@ namespace AwsSsh
 			var success = instance.Run();
 			if (success && Settings.CloseOnConnect)
 				Application.Current.Shutdown();
+		}
+		public void CopyCurrent()
+		{
+			if (SelectedItem != null && !string.IsNullOrWhiteSpace(SelectedItem.ClipboardText))
+				Clipboard.SetText(SelectedItem.ClipboardText);
 		}
 	}
 }

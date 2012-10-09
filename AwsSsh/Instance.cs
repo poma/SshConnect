@@ -58,6 +58,11 @@ namespace AwsSsh
 			get { return null; }
 		}
 
+		public virtual string ClipboardText
+		{
+			get { return Name; }
+		}
+
 		public virtual bool Run()
 		{
 			return true;

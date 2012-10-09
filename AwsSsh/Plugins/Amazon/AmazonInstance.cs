@@ -110,6 +110,11 @@ namespace AwsSsh
 			}
 		}
 
+		public override string ClipboardText
+		{
+			get { return PublicIp; }
+		}
+
 		/// <summary>
 		/// Used to merge new instance info but retain references
 		/// </summary>

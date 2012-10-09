@@ -4,6 +4,7 @@
 		xmlns:local="clr-namespace:AwsSsh"
         Title="Connect to server" Height="600" Width="250" MinHeight="300"
 		PreviewKeyDown="Window_PreviewKeyDown"
+		PreviewMouseUp="Window_PreviewMouseUp"
 		FocusManager.FocusedElement="{Binding ElementName=textBox}"
 		WindowStartupLocation="CenterScreen" SizeToContent="Manual">
 	<Window.Resources>
@@ -83,6 +84,8 @@
 				<TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" x:Name="textBox" BorderThickness="0" />
 			</DockPanel>
 			<ListBox
+				VirtualizingStackPanel.IsVirtualizing="true" VirtualizingStackPanel.VirtualizationMode="Recycling"
+				
 				Name="listBox" FocusVisualStyle="{x:Null}"
 				MouseDoubleClick="listBox_MouseDoubleClick" 
 				ItemTemplate="{StaticResource instanceTemplate}" 

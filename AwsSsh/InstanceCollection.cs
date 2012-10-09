@@ -77,10 +77,10 @@ namespace AwsSsh
 		{
 			foreach (var src in InstanceSources)
 			{
-
+				
 				BackgroundWorker w = new BackgroundWorker();
 				//IsLoading = true;
-				w.DoWork += (obj, args) => args.Result = (args.Argument as InstanceSource).GetInstanceList();
+				w.DoWork += (obj, args) => args.Result = new Tuple<InstanceSource, List<Instance>>(args.Argument as InstanceSource, (args.Argument as InstanceSource).GetInstanceList()) ;
 				w.RunWorkerCompleted += (obj, args) =>
 				{
 					//IsLoading = false;
@@ -89,8 +89,24 @@ namespace AwsSsh
 						//_updateTimer.IsEnabled = false;
 						throw new Exception("Error downloading server list: " + args.Error.Message, args.Error);
 					}
-					var newInstances = args.Result as List<Instance>;
-					src.MergeInstanceList(Instances, newInstances);
+					var previousSelection = MainWindow.instance.listBox.SelectedItem as Instance;
+
+					var res = args.Result as Tuple<InstanceSource, List<Instance>>;
+					var newInstances = res.Item2;
+					using (MainWindowViewModel.instance.InstanceCollectionView.DeferRefresh())
+						res.Item1.MergeInstanceList(Instances, newInstances);
+
+					if (MainWindow.instance.listBox.Items.Count > 0)
+					{
+						if (previousSelection != null)
+						{
+							int ind = MainWindow.instance.listBox.Items.OfType<Instance>().Select(i => i.Name).ToList().IndexOf(previousSelection.Name);
+							if (ind < 0) ind = 0;
+							MainWindow.instance.listBox.SelectedIndex = ind;
+						}
+						else
+							MainWindow.instance.listBox.SelectedIndex = 0;
+					}
 
 					//var previousSelection = listBox.SelectedItem as AmazonInstance;
 					//using (InstanceCollectionView.DeferRefresh())

@@ -13,7 +13,9 @@ namespace AwsSsh.Plugins.Putty
 		public override List<Instance> GetInstanceList()
 		{
 			if (puttySessions == null)
-				puttySessions = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\SimonTatham\PuTTY\Sessions").GetSubKeyNames().ToList();
+				puttySessions = Microsoft.Win32.Registry.CurrentUser
+					.OpenSubKey(@"Software\SimonTatham\PuTTY\Sessions").GetSubKeyNames()
+					.Select(s => s.Replace("%20", " ")).ToList();
 			return puttySessions.Select(s => new PuttyInstance(s)).OfType<Instance>().ToList();
 			//if (!App.Settings.IncludePuttySessionsInList) return;
 		}

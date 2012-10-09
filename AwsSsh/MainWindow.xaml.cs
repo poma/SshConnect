@@ -23,21 +23,24 @@ namespace AwsSsh
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		public static MainWindow instance;
+
 		private const int BigStep = 20;
 		private MainWindowViewModel _model;
 
 
 		public MainWindow()
 		{
+			instance = this;
 			InitializeComponent();
 			_model = new MainWindowViewModel();
 			DataContext = _model;
 
 			Closing += (obj, args) => { _model.Close(); };
 
-			// Just in case
-			new DispatcherTimer { IsEnabled = true, Interval = TimeSpan.FromMilliseconds(200) }
-				.Tick += (obj, args) => { if (!textBox.IsFocused) textBox.Focus(); };
+			// Return focus for mouse clicks etc.
+			//new DispatcherTimer { IsEnabled = true, Interval = TimeSpan.FromMilliseconds(200) }
+			//	.Tick += (obj, args) => { if (!textBox.IsFocused) textBox.Focus(); };
 		}
 
 		private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -82,6 +85,15 @@ namespace AwsSsh
 						listBox.ScrollIntoView(listBox.SelectedItem);
 					}
 					break;
+				case Key.C:
+				case Key.Insert:
+					if ((e.KeyboardDevice.Modifiers == ModifierKeys.Control) // Copy
+						&& string.IsNullOrWhiteSpace(textBox.SelectedText))
+					{
+						_model.CopyCurrentCommand.Execute(null);
+					}
+					else goto default;
+					break;
 
 				default:
 					// This will just send keystroke to textbox
@@ -89,6 +101,11 @@ namespace AwsSsh
 					textBox.Focus();
 					break;
 			}			
+		}
+
+		private void Window_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+		{
+			textBox.Focus();
 		}
 
         private void Preferences_MouseDown(object sender, MouseButtonEventArgs e)
@@ -107,6 +124,5 @@ namespace AwsSsh
 		{
 			_model.RefreshListCommand.Execute(null);
 		}
-
 	}
 }
