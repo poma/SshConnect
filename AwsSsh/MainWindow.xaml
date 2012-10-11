@@ -23,6 +23,9 @@
 								<DataTrigger Binding="{Binding StateColor}" Value="Red">
 									<Setter Property="Source" Value="/Resources/red.png" />
 								</DataTrigger>
+								<DataTrigger Binding="{Binding StateColor}" Value="Blue">
+									<Setter Property="Source" Value="/Resources/blue.png" />
+								</DataTrigger>
 								<DataTrigger Binding="{Binding StateColor}" Value="Grey">
 									<Setter Property="Source" Value="/Resources/gray.png" />
 								</DataTrigger>

@@ -11,7 +11,8 @@
     <RootNamespace>AwsSsh</RootNamespace>
     <AssemblyName>AwsSsh</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -71,6 +72,9 @@
     </Compile>
     <Compile Include="InstanceSource.cs" />
     <Compile Include="Plugins\Amazon\AmazonInstanceSource.cs" />
+    <Compile Include="Plugins\Chef\ChefClient.cs" />
+    <Compile Include="Plugins\Chef\ChefInstance.cs" />
+    <Compile Include="Plugins\Chef\ChefInstanceSource.cs" />
     <Compile Include="Plugins\Putty\PuttyInstance.cs" />
     <Compile Include="Plugins\Putty\PuttyInstanceSource.cs" />
     <Compile Include="MvvmFoundation\PropertyObserver.cs" />
@@ -169,7 +173,7 @@
     <Resource Include="Resources\Error.png" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Plugins\Chef\" />
+    <Resource Include="Resources\blue.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

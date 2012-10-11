@@ -24,6 +24,8 @@ namespace AwsSsh
 	{
 		public static readonly string CacheFile = Path.Combine(Path.GetTempPath(), "AwsSsh.cache.xml");
 
+		private int _loadingCount;
+
         private bool isLoading;
 		public bool IsLoading
 		{
@@ -79,11 +81,14 @@ namespace AwsSsh
 			{
 				
 				BackgroundWorker w = new BackgroundWorker();
-				//IsLoading = true;
+				IsLoading = true;
+				_loadingCount++;
 				w.DoWork += (obj, args) => args.Result = new Tuple<InstanceSource, List<Instance>>(args.Argument as InstanceSource, (args.Argument as InstanceSource).GetInstanceList()) ;
 				w.RunWorkerCompleted += (obj, args) =>
 				{
-					//IsLoading = false;
+					_loadingCount--;
+					if (_loadingCount == 0)
+						IsLoading = false;
 					if (args.Error != null)
 					{
 						//_updateTimer.IsEnabled = false;
@@ -96,26 +101,23 @@ namespace AwsSsh
 					using (MainWindowViewModel.instance.InstanceCollectionView.DeferRefresh())
 						res.Item1.MergeInstanceList(Instances, newInstances);
 
+					//if (MainWindow.instance.listBox.Items.Count > 0)
+					//{
+					//	if (previousSelection != null)
+					//	{
+					//		int ind = MainWindow.instance.listBox.Items.OfType<Instance>().Select(i => i.Name).ToList().IndexOf(previousSelection.Name);
+					//		if (ind < 0) ind = 0;
+					//		MainWindow.instance.listBox.SelectedIndex = ind;
+					//	}
+					//	else
+					//		MainWindow.instance.listBox.SelectedIndex = 0;
+					//}
+
 					if (MainWindow.instance.listBox.Items.Count > 0)
-					{
-						if (previousSelection != null)
-						{
-							int ind = MainWindow.instance.listBox.Items.OfType<Instance>().Select(i => i.Name).ToList().IndexOf(previousSelection.Name);
-							if (ind < 0) ind = 0;
-							MainWindow.instance.listBox.SelectedIndex = ind;
-						}
+						if (previousSelection != null && MainWindow.instance.listBox.Items.Contains(previousSelection))
+							MainWindow.instance.listBox.SelectedItem = previousSelection;
 						else
 							MainWindow.instance.listBox.SelectedIndex = 0;
-					}
-
-					//var previousSelection = listBox.SelectedItem as AmazonInstance;
-					//using (InstanceCollectionView.DeferRefresh())
-					//	AmazonClient.MergeInstanceList(Instances, newInstances);
-					//if (listBox.Items.Count > 0)
-					//	if (previousSelection != null && listBox.Items.Contains(previousSelection))
-					//		listBox.SelectedItem = previousSelection;
-					//	else
-					//		listBox.SelectedIndex = 0;
 				};
 				w.RunWorkerAsync(src);
 			}

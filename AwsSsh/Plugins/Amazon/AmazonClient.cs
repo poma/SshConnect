@@ -70,13 +70,13 @@ namespace AwsSsh
 			var itemsToUpdate = existingInstances.OfType<AmazonInstance>().Join(newInstances, a => a.Id, a => a.Id, (a, b) => new { Old = a, New = b }).ToList();
 			itemsToAdd.ForEach(a => existingInstances.Add(a));
 			itemsToRemove.ForEach(a => existingInstances.Remove(a));
-			//itemsToUpdate.ForEach(a => AmazonInstance.AssignInstance(a.Old, a.New));
-			itemsToUpdate.ForEach(a =>
-			{
-				var ind = existingInstances.IndexOf(a.Old);
-				existingInstances.Remove(a.Old);
-				existingInstances.Insert(ind, a.New);
-			});
+			itemsToUpdate.ForEach(a => AmazonInstance.AssignInstance(a.Old, a.New));
+			//itemsToUpdate.ForEach(a =>
+			//{
+			//	var ind = existingInstances.IndexOf(a.Old);
+			//	existingInstances.Remove(a.Old);
+			//	existingInstances.Insert(ind, a.New);
+			//});
 		}
 
 		public static bool CheckConnection()

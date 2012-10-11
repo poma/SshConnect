@@ -19,6 +19,12 @@ namespace AwsSsh.ApplicationSettings
 		[DefaultValue("C:\\putty.exe")]
 		public string PuttyPath { get; set; }
 
+		[DefaultValue(@"V:\Development\chef.pub")]
+		public string ChefPublicKey { get; set; }
+
+		[DefaultValue(@"V:\Development\chef.pem")]
+		public string ChefPrivateKey { get; set; }
+
 		[DefaultValue("")]
 		public string PuttySession { get; set; }
 

@@ -9,6 +9,7 @@ namespace AwsSsh
 		Green, 
 		Yellow, 
 		Red, 
+		Blue,
 		Gray
 	}
 }
