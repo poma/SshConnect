@@ -32,9 +32,11 @@ namespace AwsSsh
 		public MainWindow()
 		{
 			instance = this;
-			InitializeComponent();
+			
 			_model = new MainWindowViewModel();
 			DataContext = _model;
+
+			InitializeComponent();
 
 			Closing += (obj, args) => { _model.Close(); };
 

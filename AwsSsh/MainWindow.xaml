@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:local="clr-namespace:AwsSsh"
-        Title="Connect to server" Height="600" Width="250" MinHeight="300"
+        Title="Connect to server" Height="{Binding Settings.WindowHeight, Mode=TwoWay}" Width="{Binding Settings.WindowWidth, Mode=TwoWay}" MinHeight="300"
 		PreviewKeyDown="Window_PreviewKeyDown"
 		PreviewMouseUp="Window_PreviewMouseUp"
 		FocusManager.FocusedElement="{Binding ElementName=textBox}"
@@ -86,9 +86,7 @@
 				</Grid>
 				<TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" x:Name="textBox" BorderThickness="0" />
 			</DockPanel>
-			<ListBox
-				VirtualizingStackPanel.IsVirtualizing="true" VirtualizingStackPanel.VirtualizationMode="Recycling"
-				
+			<ListBox	
 				Name="listBox" FocusVisualStyle="{x:Null}"
 				MouseDoubleClick="listBox_MouseDoubleClick" 
 				ItemTemplate="{StaticResource instanceTemplate}" 

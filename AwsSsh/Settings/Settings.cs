@@ -19,11 +19,11 @@ namespace AwsSsh.ApplicationSettings
 		[DefaultValue("C:\\putty.exe")]
 		public string PuttyPath { get; set; }
 
-		[DefaultValue(@"V:\Development\chef.pub")]
-		public string ChefPublicKey { get; set; }
+		[DefaultValue(@"")]
+		public string ChefKey { get; set; }
 
-		[DefaultValue(@"V:\Development\chef.pem")]
-		public string ChefPrivateKey { get; set; }
+		[DefaultValue("poma")]
+		public string ChefUser { get; set; }
 
 		[DefaultValue("")]
 		public string PuttySession { get; set; }
@@ -45,6 +45,12 @@ namespace AwsSsh.ApplicationSettings
 
 		[DefaultValue(true)]
 		public bool IsFirstTimeConfiguration { get; set; }
+
+		[DefaultValue(250)]
+		public int WindowWidth { get; set; }
+
+		[DefaultValue(600)]
+		public int WindowHeight { get; set; }
 
 		[DefaultValue(false)]
 		public bool ShowPuttyButton

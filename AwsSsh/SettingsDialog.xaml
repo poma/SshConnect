@@ -73,7 +73,17 @@
 			</DockPanel>
 
 			<DockPanel>
-				<TextBlock Text="Path to key file:*" />
+				<TextBlock Text="Chef private key:" />
+				<TextBox Text="{Binding ChefKey}" />
+			</DockPanel>
+
+			<DockPanel>
+				<TextBlock Text="Chef user:" />
+				<TextBox Text="{Binding ChefUser}" />
+			</DockPanel>
+
+			<DockPanel>
+				<TextBlock Text="Path to ssh key file:*" />
 				<TextBox Text="{Binding KeyPath}" />
 			</DockPanel>
 

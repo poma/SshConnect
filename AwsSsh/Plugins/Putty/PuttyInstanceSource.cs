@@ -17,7 +17,6 @@ namespace AwsSsh.Plugins.Putty
 					.OpenSubKey(@"Software\SimonTatham\PuTTY\Sessions").GetSubKeyNames()
 					.Select(s => s.Replace("%20", " ")).ToList();
 			return puttySessions.Select(s => new PuttyInstance(s)).OfType<Instance>().ToList();
-			//if (!App.Settings.IncludePuttySessionsInList) return;
 		}
 
 		public override void MergeInstanceList(ObservableCollection<Instance> src, List<Instance> newList)
@@ -25,17 +24,5 @@ namespace AwsSsh.Plugins.Putty
 			var names = src.Select(a => a.Name);
 			newList.ForEach(s => { if (!names.Contains(s.Name)) src.Add(s); });
 		}
-
-		//void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
-		//{
-		//	//if (e.PropertyName == "IncludePuttySessionsInList")
-		//	//{
-		//	//	Instances.Where(a => a.IsPuttyInstance).ToList().ForEach(a => Instances.Remove(a));
-		//	//	if (Settings.IncludePuttySessionsInList)
-		//	//		GetPuttySessions();
-		//	//}
-		//}
-
-		//Settings.PropertyChanged += Settings_PropertyChanged;
 	}
 }

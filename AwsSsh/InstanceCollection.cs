@@ -17,6 +17,7 @@ using System.Threading;
 using System.Reflection;
 using MvvmFoundation.Wpf;
 using AwsSsh.Plugins.Putty;
+using AwsSsh.Plugins.Chef;
 
 namespace AwsSsh
 {
@@ -66,7 +67,8 @@ namespace AwsSsh
 			InstanceSources = new List<InstanceSource>
 			{
 				new AmazonInstanceSource(),
-				new PuttyInstanceSource()
+				new PuttyInstanceSource(),
+				new ChefInstanceSource()
 			};
 
 			// todo: wrap exceptions

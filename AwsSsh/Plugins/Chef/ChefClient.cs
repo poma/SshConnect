@@ -5,30 +5,42 @@ using System.Text;
 using System.Net;
 using System.Security.Cryptography;
 using System.IO;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Encodings;
+using Org.BouncyCastle.Crypto.Engines;
+using Org.BouncyCastle.OpenSsl;
 
 namespace AwsSsh.Plugins.Chef
 {
 	public class ChefClient
 	{
-		public static void ChefRequest()
+		public static string ChefRequest(string path, string query = null)
 		{
 			WebClient client = new WebClient();
 			var date = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ");
-			string user = "admin";
 
+			client.Headers.Add("Accept", "application/json");
 			client.Headers.Add("X-Ops-Timestamp", date);
-            client.Headers.Add("X-Ops-UserId", user);
+			client.Headers.Add("X-Ops-UserId", App.Settings.ChefUser);
 			client.Headers.Add("X-Ops-Content-Hash", Hash(""));
-			client.Headers.Add("X-Ops-Sign", "version=1.0");
-			client.Headers.Add("X-Ops-Authorization-N", );
+			client.Headers.Add("X-Ops-Sign", "algorithm=sha1;version=1.0");
 
-			var headers = String.Format("Method:GET\nHashed Path:/nodes\nX-Ops-Content-Hash:{0}\nX-Ops-Timestamp:{1}\nX-Ops-UserId:{2}", Hash(""), date, user);
+			//"Method:HTTP_METHOD\nHashed Path:HASHED_PATH\nX-Ops-Content-Hash:HASHED_BODY\nX-Ops-Timestamp:TIME\nX-Ops-UserId:USERID"
+			var headers = String.Format("Method:GET\nHashed Path:{3}\nX-Ops-Content-Hash:{0}\nX-Ops-Timestamp:{1}\nX-Ops-UserId:{2}", Hash(""), date, App.Settings.ChefUser, Hash(path));
+
 			var sign = Sign(headers);
+			int n = 1;
+			while (sign.Length > 0)
+			{
+				int chars = Math.Min(60, sign.Length);
+				client.Headers.Add("X-Ops-Authorization-" + n, sign.Substring(0, chars));
+				sign = sign.Remove(0, chars);
+				n++;
+			}
 
-            sign.Split()
-
-
-			client.DownloadString("http://chef.redhelper.ru:4000/nodes");
+			return client.DownloadString("http://chef.redhelper.ru:4000" + path + (string.IsNullOrEmpty(query) ? "" : "?" + query));
 		}
 
 		public static string Hash(string s)
@@ -38,17 +50,20 @@ namespace AwsSsh.Plugins.Chef
 
 		public static string Sign(string s)
 		{
-			RSAParameters keyPair;
+			var bytes = Encoding.UTF8.GetBytes(s);
 
-			using (var reader = File.OpenText(App.Settings.ChefPrivateKey))
-				keyPair = new ThirdParty.BouncyCastle.OpenSsl.PemReader(reader).ReadPrivatekey();
+			AsymmetricCipherKeyPair key;
 
-			var rsa = new RSACryptoServiceProvider();
-			rsa.ImportParameters(keyPair);
+			using (var reader = File.OpenText(App.Settings.ChefKey))
+				key = (AsymmetricCipherKeyPair)new PemReader(reader).ReadObject();
 
-			var signed = rsa.SignData(Encoding.UTF8.GetBytes(s), new SHA1CryptoServiceProvider());
+			ISigner sig = SignerUtilities.GetSigner("RSA");
+			sig.Init(true, key.Private);
+			sig.BlockUpdate(bytes, 0, bytes.Length);
+			byte[] signature = sig.GenerateSignature();
+			var signedString = Convert.ToBase64String(signature);
+			return signedString;
 
-			return Convert.ToBase64String(signed);
 		}
 	}
 }
