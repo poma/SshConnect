@@ -70,6 +70,12 @@ namespace AwsSsh
 	{
 		public string Error { get; set; }
 		public string Details { get; set; }
+		public bool IgnoreErrors
+		{
+			get { return ExceptionDialog.IgnoreErrors; }
+			set { ExceptionDialog.IgnoreErrors = value; }
+		}
+		
 		private readonly Exception exception;
 
 		internal ExceptionDialogWindow(Exception e)
