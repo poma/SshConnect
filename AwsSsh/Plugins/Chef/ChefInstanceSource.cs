@@ -17,7 +17,8 @@ namespace AwsSsh.Plugins.Chef
 				.Select(s => new ChefInstance
 				{
 					Name = (string)s["name"],
-					Endpoint = (string)s["automatic"]["fqdn"]
+					Endpoint = (string)s["automatic"]["fqdn"],
+					LastUpdate = DateTimeFromUnixTime((int)s["automatic"]["ohai_time"])
 				})
 				.Cast<Instance>().ToList();
 			return instances;
@@ -30,5 +31,12 @@ namespace AwsSsh.Plugins.Chef
 			newList.ForEach(s => { if (!names.Contains(s.Name)) src.Add(s); });
 			src.OfType<ChefInstance>().Where(s => !newNames.Contains(s.Name)).ToList().ForEach(s => src.Remove(s));
 		}
+
+		public static DateTime DateTimeFromUnixTime(int unixTime)
+		{
+			return new DateTime(1970,1,1,0,0,0,0).AddSeconds(unixTime).ToLocalTime();
+		}
 	}
 }
+
+//new DateTime(1970,1,1,0,0,0,0).AddSeconds((int)json["rows"].ToArray()[0]["automatic"]["ohai_time"]).ToLocalTime()

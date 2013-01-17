@@ -19,6 +19,21 @@ namespace AwsSsh.Plugins.Chef
 			}
 		}
 
+		private DateTime lastUpdate;
+		public DateTime LastUpdate
+		{
+			get { return lastUpdate; }
+			set
+			{
+				if (lastUpdate == value) return;
+				lastUpdate = value;
+				StateColor = StateColor.Yellow;
+				StateColor = lastUpdate.AddHours(1) < DateTime.Now ? StateColor.Red : StateColor.Blue;
+				OnPropertyChanged("StateColor");
+				OnPropertyChanged("LastUpdate");
+			}
+		}
+
 		public override string ClipboardText
 		{
 			get { return Endpoint; }
