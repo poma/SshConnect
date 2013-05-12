@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 namespace AwsSsh.Plugins.Chef
 {
+	[DebuggerDisplay("Name = {_name}, Endpoint = {endpoint}")]
 	public class ChefInstance:Instance
 	{
 		private string endpoint;

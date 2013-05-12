@@ -9,6 +9,7 @@ using System.Windows;
 namespace AwsSsh
 {
 	[Serializable]
+	[DebuggerDisplay("Name = {_name}")]
 	public class Instance : INotifyPropertyChanged
 	{
 		private string _name;
