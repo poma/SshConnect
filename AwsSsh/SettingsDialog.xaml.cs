@@ -48,7 +48,7 @@ namespace AwsSsh
 				Process.Start(link);
 		}
 
-		private void Clear_Click(object sender, RoutedEventArgs e)
+		private void ClearSettings_Click(object sender, RoutedEventArgs e)
 		{
 			if (MessageBox.Show("All your settings and cache will be cleared and application will shutdown", "Clear data", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
 			{
@@ -57,6 +57,11 @@ namespace AwsSsh
 				App.DontSaveSettings = true;
 				App.Current.Shutdown();
 			}
+		}
+
+		private void ClearList_Click(object sender, RoutedEventArgs e)
+		{
+			MainWindowViewModel.instance.InstanceCollection.Instances.Clear();
 		}
 
 		private void showShareMenu(object sender, MouseButtonEventArgs e)

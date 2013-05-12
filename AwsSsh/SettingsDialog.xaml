@@ -1,7 +1,7 @@
 ﻿<Window x:Class="AwsSsh.SettingsDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Settings" Height="auto" Width="591" SizeToContent="Height">
+        Title="Settings" Height="auto" Width="800" SizeToContent="Height">
 	<DockPanel Background="#EEEEF4">
 		<Border DockPanel.Dock="Bottom" BorderThickness="0, 1, 0, 0" BorderBrush="#787676" SnapsToDevicePixels="True">
 			<Border BorderThickness="0, 1, 0, 0" BorderBrush="#f1eeee" Background="#DBDBE0" SnapsToDevicePixels="True">
@@ -42,7 +42,8 @@
 						</TextBlock>
 					</StackPanel>
 					<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="12">
-						<Button Content="Clear data" Padding="15, 2" Click="Clear_Click" Margin="0, 0, 8, 0"  />
+						<Button Content="Clear list" Padding="15, 2" Click="ClearList_Click" Margin="0, 0, 8, 0"  />
+						<Button Content="Clear settings" Padding="15, 2" Click="ClearSettings_Click" Margin="0, 0, 8, 0"  />
 						<Button Content="OK" Padding="25, 2" IsDefault="True" Click="OK_Click"  />
 					</StackPanel>					
 				</Grid>
