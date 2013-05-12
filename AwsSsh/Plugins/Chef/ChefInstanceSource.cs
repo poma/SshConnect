@@ -17,7 +17,7 @@ namespace AwsSsh.Plugins.Chef
 				.Select(s => new ChefInstance
 				{
 					Name = (string)s["name"],
-					Endpoint = (string)s["automatic"]["fqdn"],
+					Endpoint = (string)s["automatic"]["ipaddress"],
 					LastUpdate = DateTimeFromUnixTime((int)s["automatic"]["ohai_time"])
 				})
 				.Cast<Instance>().ToList();
