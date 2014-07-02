@@ -108,7 +108,14 @@ namespace AwsSsh
 
 		private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
 		{
-			e.Accepted = (e.Item as Instance).Name.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0;
+			string name = (e.Item as Instance).Name.ToLower();
+			foreach (var s in SearchText.ToLower().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+				if (!name.Contains(s))
+				{
+					e.Accepted = false;
+					return;
+				}
+			e.Accepted = true;
 		}
 
 
