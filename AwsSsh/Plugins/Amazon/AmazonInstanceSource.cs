@@ -7,11 +7,38 @@ using Amazon.EC2;
 using Amazon.EC2.Model;
 using AwsSsh.Properties;
 using System.Windows;
+using AwsSsh.Plugins.Chef;
+using System.Windows.Controls;
 
 namespace AwsSsh.Plugins.Amazon
 {
 	public class AmazonInstanceSource: IInstanceSource
 	{
+		public string Name { get { return "Amazon"; } }
+
+		private AmazonSettings _settings;
+		public SettingsBase Settings
+		{
+			get
+			{
+				if (_settings == null)
+					_settings = new AmazonSettings();
+				return _settings;
+			}
+			set { _settings = value as AmazonSettings; }
+		}
+
+		private AmazonSettingsControl _settingsControl;
+		public Control SettingsControl
+		{
+			get
+			{
+				if (_settingsControl == null)
+					_settingsControl = new AmazonSettingsControl();
+				return _settingsControl;
+			}
+		}
+
 		public List<Instance> GetInstanceList()
 		{
 			try
@@ -19,9 +46,9 @@ namespace AwsSsh.Plugins.Amazon
 				var result = new List<AmazonInstance>();
 
 				AmazonEC2 ec2 = AWSClientFactory.CreateAmazonEC2Client(
-					App.Settings.AWSAccessKey,
-					App.Settings.AWSSecretKey,
-					new AmazonEC2Config { ServiceURL = App.Settings.ServiceUrl }
+					_settings.AWSAccessKey,
+					_settings.AWSSecretKey,
+					new AmazonEC2Config { ServiceURL = _settings.ServiceUrl }
 					);
 
 				var ec2Response = ec2.DescribeInstances(new DescribeInstancesRequest());
@@ -59,15 +86,15 @@ namespace AwsSsh.Plugins.Amazon
 			}
 		}
 
-		public static bool CheckConnection()
+		public bool CheckConnection()
 		{
 
 			try
 			{
 				AmazonEC2 ec2 = AWSClientFactory.CreateAmazonEC2Client(
-						App.Settings.AWSAccessKey,
-						App.Settings.AWSSecretKey,
-						new AmazonEC2Config { ServiceURL = App.Settings.ServiceUrl }
+						_settings.AWSAccessKey,
+						_settings.AWSSecretKey,
+						new AmazonEC2Config { ServiceURL = _settings.ServiceUrl }
 						);
 
 				ec2.DescribeInstances(new DescribeInstancesRequest());

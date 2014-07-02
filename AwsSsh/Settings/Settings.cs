@@ -3,27 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ComponentModel;
 
-namespace AwsSsh.ApplicationSettings
+namespace AwsSsh
 {
 	public class Settings : SettingsBase, INotifyPropertyChanged
 	{
-		[DefaultValue("Put your access key here")]
-		public string AWSAccessKey { get; set; }
-
-		[DefaultValue("Put your secret key here")]
-		public string AWSSecretKey { get; set; }
-		
-		[DefaultValue("C:\\certificate.ppk")]
-		public string KeyPath { get; set; }
-
 		[DefaultValue("C:\\putty.exe")]
 		public string PuttyPath { get; set; }
-
-		[DefaultValue(@"")]
-		public string ChefKey { get; set; }
-
-		[DefaultValue("poma")]
-		public string ChefUser { get; set; }
 
 		[DefaultValue("")]
 		public string PuttySession { get; set; }
@@ -31,14 +16,11 @@ namespace AwsSsh.ApplicationSettings
 		[DefaultValue("")]
 		public string CommandLineArgs { get; set; }
 
-		[DefaultValue("https://us-east-1.ec2.amazonaws.com")]
-		public string ServiceUrl { get; set; }
-
 		[DefaultValue(true)]
 		public bool CloseOnConnect { get; set; }
 
-		[DefaultValue("ubuntu")]
-		public string DefaultUser { get; set; }
+		[DefaultValue("C:\\certificate.ppk")]
+		public string KeyPath { get; set; }
 
 		[DefaultValue(10)]
 		public int UpdateInterval { get; set; }
@@ -84,8 +66,12 @@ namespace AwsSsh.ApplicationSettings
 			}
 		}
 
-
-		public Settings() : base(typeof(Settings)) { }
+		private List<SettingsBase> _instanceSourcesSettings = new List<SettingsBase>();
+		public List<SettingsBase> InstanceSourcesSettings
+		{
+			get { return _instanceSourcesSettings; }
+			set { _instanceSourcesSettings = value; }
+		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
 		public virtual void OnPropertyChanged(string property)

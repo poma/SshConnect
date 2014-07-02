@@ -10,7 +10,6 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
 using System.Xml.Serialization;
-using AwsSsh.ApplicationSettings;
 using System.Configuration;
 using AwsSsh.Plugins.Amazon;
 using System.Threading;
@@ -37,7 +36,7 @@ namespace AwsSsh
 			}
 		}
 
-		public ObservableCollection<Instance> _instances;
+		private ObservableCollection<Instance> _instances;
 		public ObservableCollection<Instance> Instances
 		{
 			get
@@ -60,14 +59,9 @@ namespace AwsSsh
 			}
 		}
 
-		public InstanceCollection()
+		public InstanceCollection(List<IInstanceSource> sources = null)
 		{
-			InstanceSources = new List<IInstanceSource>
-			{
-				new AmazonInstanceSource(),
-				//new PuttyInstanceSource(),
-				//new ChefInstanceSource()
-			};
+			InstanceSources = sources ?? new List<IInstanceSource>();
 
 			// todo: wrap exceptions
 			var list = InstanceCache.Load();
@@ -112,7 +106,7 @@ namespace AwsSsh
 			}
 		}
 
-		public void MergeInstances(IInstanceSource src, List<Instance> newInstances)
+		private void MergeInstances(IInstanceSource src, List<Instance> newInstances)
 		{
 			var existingInstances = Instances;
 			var c = new InstanceComparer();
@@ -124,7 +118,7 @@ namespace AwsSsh
 			itemsToUpdate.ForEach(a => CopyPropertyAttribute.CopyProperties(a.New, a.Old));
 		}
 
-		public class InstanceComparer : IEqualityComparer<Instance>
+		private class InstanceComparer : IEqualityComparer<Instance>
 		{
 			public bool Equals(Instance x, Instance y)
 			{

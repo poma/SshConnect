@@ -4,34 +4,31 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using Microsoft.Win32;
+using System.IO;
+using System.Xml.Serialization;
 
-namespace AwsSsh.ApplicationSettings
+namespace AwsSsh
 {
+	[Serializable]
 	public class SettingsBase
 	{
-		Type _type;
-		List<PropertyDescriptionInfo> _properties;
+		private const string SettingsFile = "Settings.xml";
+		private List<PropertyDescriptionInfo> _properties;
 
-		private static RegistryKey _registryKey;
-		private static RegistryKey RegistryKey
+		protected SettingsBase()
 		{
-			get
-			{
-				if (_registryKey == null)
-					_registryKey = Registry.CurrentUser.CreateSubKey(@"Software\AwsSsh\");
-				return _registryKey;
-			}
+			_properties = GetUserProperties();
+			_properties.ForEach(p => p.Property.SetValue(this, p.Attribute.DefaultValue, null));
 		}
 
-		protected SettingsBase(Type _Type)
+		private static Type[] GetSerializedTypes()
 		{
-			_type = _Type;
-			_properties = GetUserProperties();
+			return Assembly.GetExecutingAssembly().GetTypes().Where(t => typeof(SettingsBase).IsAssignableFrom(t)).ToArray();
 		}
 
 		private List<PropertyDescriptionInfo> GetUserProperties()
 		{
-			return _type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
+			return this.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
 									  .Select(p => new PropertyDescriptionInfo(p, p.GetCustomAttributes(typeof(DefaultValueAttribute), false).FirstOrDefault() as DefaultValueAttribute))
 									  .Where(p => p.Attribute != null)
 									  .ToList();
@@ -39,34 +36,52 @@ namespace AwsSsh.ApplicationSettings
 
 		public void Save()
 		{
-			foreach (var p in _properties)
-			{
-				object val = p.Property.GetValue(this, null);
-				if (val != null)
-					RegistryKey.SetValue(p.Property.Name, val, RegistryValueKind.String);
-			}
+			//try
+			//{
+				using (TextWriter textWriter = new StreamWriter(SettingsFile))
+				{
+					XmlSerializer serializer = new XmlSerializer(typeof(SettingsBase), GetSerializedTypes());
+					serializer.Serialize(textWriter, this);
+				}
+			//}
+			//catch (Exception ex)
+			//{
+			//	File.Delete(SettingsFile);
+			//	try
+			//	{
+			//		do
+			//		{
+			//			File.WriteAllText(SettingsFile + ".error.txt", String.Format("\r\n\r\n{0}\r\n{1}", ex.Message, ex.StackTrace));
+			//			ex = ex.InnerException;
+			//		} while (ex != null);
+			//	}
+			//	catch { } // I know that this is bad
+			//}
 		}
 
-		public void Load()
+		public static SettingsBase Load()
 		{
-			foreach (var p in _properties)
-			{
-				object val = RegistryKey.GetValue(p.Property.Name, p.Attribute.DefaultValue);
-				if (val != null)
+			if (!File.Exists(SettingsFile))
+				return null;
+			//try
+			//{
+				using (TextReader textReader = new StreamReader(SettingsFile))
 				{
-					if (p.Property.PropertyType == typeof(string)) val = val.ToString();
-					if (p.Property.PropertyType == typeof(int)) val = int.Parse(val.ToString());
-					if (p.Property.PropertyType == typeof(bool)) val = bool.Parse(val.ToString());
-					if (typeof(Enum).IsAssignableFrom(p.Property.PropertyType)) val = Enum.Parse(p.Property.PropertyType, val.ToString());
-					if (val != null)
-						p.Property.SetValue(this, val, null);
+					XmlSerializer deserializer = new XmlSerializer(typeof(SettingsBase), GetSerializedTypes());
+					return (SettingsBase)deserializer.Deserialize(textReader);
 				}
-			}
+			//}
+			//catch
+			//{
+			//	// I know that this is bad
+			//	// Most probably this means that cache is corrupted
+			//	return null;
+			//}
 		}
 
 		public void Clear()
 		{
-			Registry.CurrentUser.DeleteSubKeyTree(@"Software\AwsSsh", false);
+			File.Delete(SettingsFile);
 		}
 
 		private class PropertyDescriptionInfo

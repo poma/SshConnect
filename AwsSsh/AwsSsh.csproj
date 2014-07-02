@@ -74,6 +74,10 @@
       <DependentUpon>ExceptionDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\IInstanceSource.cs" />
+    <Compile Include="Plugins\Amazon\AmazonSettings.cs" />
+    <Compile Include="Plugins\Amazon\AmazonSettingsControl.xaml.cs">
+      <DependentUpon>AmazonSettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Plugins\Chef\ChefSettings.cs" />
     <Compile Include="Plugins\Chef\ChefSettingsControl.xaml.cs">
       <DependentUpon>ChefSettingsControl.xaml</DependentUpon>
@@ -88,7 +92,7 @@
     <Compile Include="MvvmFoundation\PropertyObserver.cs" />
     <Compile Include="MvvmFoundation\RelayCommand.cs" />
     <Compile Include="Model\StateColor.cs" />
-    <Compile Include="XmlUtils.cs" />
+    <Compile Include="Utils\XmlUtils.cs" />
     <Compile Include="Settings\DefaultValueAttribute.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="Settings\SettingsBase.cs" />
@@ -108,13 +112,17 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="GifImage.cs" />
+    <Compile Include="Utils\GifImage.cs" />
     <Compile Include="Model\Instance.cs" />
     <Compile Include="Plugins\Amazon\AmazonInstatnceStates.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Plugins\Amazon\AmazonSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Plugins\Chef\ChefSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -142,7 +150,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="app.config" />
     <Resource Include="AWSSDK.dll.gz" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

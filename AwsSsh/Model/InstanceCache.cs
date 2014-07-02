@@ -10,11 +10,36 @@ namespace AwsSsh
 {
 	public static class InstanceCache
 	{
-		public static readonly string CacheFile = Path.Combine(Path.GetTempPath(), "AwsSsh.cache.xml");
+		public static readonly string CacheFile = "Cache.xml";
 
 		public static Type[] GetSerializedTypes()
 		{
 			return Assembly.GetExecutingAssembly().GetTypes().Where(t => typeof(Instance).IsAssignableFrom(t)).ToArray();
+		}
+		public static void Save(IEnumerable<Instance> list)
+		{
+			try
+			{
+				File.Delete(CacheFile + ".error.txt");
+				using (TextWriter textWriter = new StreamWriter(CacheFile))
+				{
+					XmlSerializer serializer = new XmlSerializer(typeof(List<Instance>), GetSerializedTypes());
+					serializer.Serialize(textWriter, list.ToList());
+				}
+			}
+			catch (Exception ex)
+			{
+				File.Delete(CacheFile);
+				try
+				{
+					do
+					{
+						File.WriteAllText(CacheFile + ".error.txt", String.Format("\r\n\r\n{0}\r\n{1}", ex.Message, ex.StackTrace));
+						ex = ex.InnerException;
+					} while (ex != null);
+				}
+				catch { } // I know that this is bad
+			}
 		}
 		public static List<Instance> Load()
 		{
@@ -25,9 +50,7 @@ namespace AwsSsh
 				using (TextReader textReader = new StreamReader(CacheFile))
 				{
 					XmlSerializer deserializer = new XmlSerializer(typeof(List<Instance>), GetSerializedTypes());
-					var instances = (List<Instance>)deserializer.Deserialize(textReader);
-					textReader.Close();
-					return instances;
+					return (List<Instance>)deserializer.Deserialize(textReader);
 				}
 			}
 			catch
@@ -37,33 +60,9 @@ namespace AwsSsh
 				return null;
 			} 
 		}
-		public static void Save(IEnumerable<Instance> list)
+		public static void Clear()
 		{
-			try
-			{
-				using (TextWriter textWriter = new StreamWriter(CacheFile))
-				{
-					XmlSerializer serializer = new XmlSerializer(typeof(List<Instance>), GetSerializedTypes());
-					serializer.Serialize(textWriter, list.ToList());
-					textWriter.Close();
-				}
-			}
-			catch (Exception ex)
-			{
-				try
-				{
-					do
-					{
-						File.WriteAllText(CacheFile + ".error.txt", String.Format("\r\n\r\n{0}\r\n{1}", ex.Message, ex.StackTrace));
-						ex = ex.InnerException;
-					} while (ex != null);
-				}
-				catch 
-				{
-					// I know that this is bad
-					File.Delete(CacheFile);
-				}
-			}
+			File.Delete(InstanceCache.CacheFile);
 		}
 	}
 }

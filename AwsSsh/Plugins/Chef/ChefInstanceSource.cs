@@ -3,14 +3,41 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections.ObjectModel;
+using System.Windows.Controls;
 
 namespace AwsSsh.Plugins.Chef
 {
 	public class ChefInstanceSource:IInstanceSource
 	{
+		public string Name { get { return "Chef"; } }
+
+		private ChefSettings _settings;
+		public SettingsBase Settings
+		{
+			get
+			{
+				if (_settings == null)
+					_settings = new ChefSettings();
+				return _settings;
+			}
+			set { _settings = value as ChefSettings; }
+		}
+
+		private ChefSettingsControl _settingsControl;
+		public Control SettingsControl
+		{
+			get
+			{
+				if (_settingsControl == null)
+					_settingsControl = new ChefSettingsControl();
+				return _settingsControl;
+			}
+		}
+		
+
 		public List<Instance> GetInstanceList()
 		{
-			string jsonString = ChefClient.ChefRequest("/search/node");
+			string jsonString = new ChefClient(_settings).ChefRequest("/search/node");
 			var json = new JsonObject(Json.JsonDecode(jsonString));
 			var instances = json["rows"].ToArray()
 				.Select(s => new ChefInstance

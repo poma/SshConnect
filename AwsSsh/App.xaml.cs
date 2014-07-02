@@ -6,7 +6,6 @@ using System.Linq;
 using System.Windows;
 using System.IO;
 using System.IO.Compression;
-using AwsSsh.ApplicationSettings;
 using System.Reflection;
 
 namespace AwsSsh
@@ -16,24 +15,30 @@ namespace AwsSsh
 	/// </summary>
 	public partial class App : Application
 	{
-		public static bool DontSaveSettings { get; set; }
-
 		private static Settings _settings;
 		public static Settings Settings
 		{
 			get 
 			{ 
 				if (_settings == null)
-					_settings = new Settings();
+					_settings = SettingsBase.Load() as Settings ?? new Settings();
 				return _settings; 
 			}
 		}
+
+		private static InstanceCollection _instanceCollection;
+		public static InstanceCollection InstanceCollection
+		{
+			get { return _instanceCollection; }
+		}
+
+		private static bool DontSaveSettings;
 
 		private void Application_Startup(object sender, StartupEventArgs e)
 		{
 			DispatcherUnhandledException += ExceptionDialog.Handler;
 			AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-			Settings.Load();
+			_instanceCollection = new InstanceCollection();
 
 			if (Settings.IsFirstTimeConfiguration)
 			{
@@ -57,29 +62,19 @@ namespace AwsSsh
 		private void Application_Exit(object sender, ExitEventArgs e)
 		{
 			if (!DontSaveSettings)
+			{
 				Settings.Save();
+				InstanceCache.Save(App.InstanceCollection.Instances);
+			}
 		}
 
-		public static bool CheckConfig()
+		public static void ClearSettingsAndExit()
 		{
-			if (!File.Exists(Settings.PuttyPath))
-			{
-				ExceptionDialog.Show("Putty not found. Please check your configuration");
-				return false;
-			}
-			if (!File.Exists(Settings.KeyPath))
-			{
-				ExceptionDialog.Show("Key file not found. Please check your configuration");
-				return false;
-			}
-			if (string.IsNullOrWhiteSpace(Settings.AWSAccessKey) || string.IsNullOrWhiteSpace(Settings.AWSAccessKey))
-			{
-				ExceptionDialog.Show("Amazon security credentials are empty. Please check your configuration");
-				return false;
-			}
-			return true;
+			InstanceCache.Clear();
+			App.Settings.Clear();
+			App.DontSaveSettings = true;
+			App.Current.Shutdown();
 		}
-
 
 		private static Assembly LoadEmbeddedDll(string name)
         {

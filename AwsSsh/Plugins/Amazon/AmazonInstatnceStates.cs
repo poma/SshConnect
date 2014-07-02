@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace AwsSsh
+namespace AwsSsh.Plugins.Amazon
 {
 	public enum AmazonInstatnceStates
 	{

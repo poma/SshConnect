@@ -9,6 +9,8 @@ namespace AwsSsh.Plugins.Chef
 	[DebuggerDisplay("Name = {_name}, Endpoint = {endpoint}")]
 	public class ChefInstance:Instance
 	{
+		private ChefSettings Settings { get { return Source.Settings as ChefSettings; } }
+
 		private string endpoint;
 		public string Endpoint
 		{

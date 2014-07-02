@@ -13,18 +13,25 @@ namespace AwsSsh.Plugins.Chef
 {
 	public class ChefClient
 	{
-		public static string ChefRequest(string path, string query = null)
+		private ChefSettings _settings;
+
+		public ChefClient(ChefSettings settings)
+		{
+			_settings = settings;
+		}
+
+		public string ChefRequest(string path, string query = null)
 		{
 			WebClient client = new WebClient();
 			var date = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ");
 
 			client.Headers.Add("Accept", "application/json");
 			client.Headers.Add("X-Ops-Timestamp", date);
-			client.Headers.Add("X-Ops-UserId", App.Settings.ChefUser);
+			client.Headers.Add("X-Ops-UserId", _settings.ChefUser);
 			client.Headers.Add("X-Ops-Content-Hash", Hash(""));
 			client.Headers.Add("X-Ops-Sign", "algorithm=sha1;version=1.0");
 
-			var headers = String.Format("Method:GET\nHashed Path:{3}\nX-Ops-Content-Hash:{0}\nX-Ops-Timestamp:{1}\nX-Ops-UserId:{2}", Hash(""), date, App.Settings.ChefUser, Hash(path));
+			var headers = String.Format("Method:GET\nHashed Path:{3}\nX-Ops-Content-Hash:{0}\nX-Ops-Timestamp:{1}\nX-Ops-UserId:{2}", Hash(""), date, _settings.ChefUser, Hash(path));
 
 			var sign = Sign(headers);
 			int n = 1;
@@ -39,18 +46,18 @@ namespace AwsSsh.Plugins.Chef
 			return client.DownloadString("http://chef.redhelper.ru:4000" + path + (string.IsNullOrEmpty(query) ? "" : "?" + query));
 		}
 
-		public static string Hash(string s)
+		public string Hash(string s)
 		{
 			return Convert.ToBase64String(new SHA1CryptoServiceProvider().ComputeHash(Encoding.UTF8.GetBytes(s)));
 		}
 
-		public static string Sign(string s)
+		public string Sign(string s)
 		{
 			var bytes = Encoding.UTF8.GetBytes(s);
 
 			AsymmetricCipherKeyPair key;
 
-			using (var reader = File.OpenText(App.Settings.ChefKey))
+			using (var reader = File.OpenText(_settings.ChefKey))
 				key = (AsymmetricCipherKeyPair)new PemReader(reader).ReadObject();
 
 			ISigner sig = SignerUtilities.GetSigner("RSA");

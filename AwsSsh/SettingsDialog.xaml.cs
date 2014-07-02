@@ -14,6 +14,8 @@ using System.Diagnostics;
 using System.IO;
 using AwsSsh.Plugins.Amazon;
 using System.Windows.Controls.Primitives;
+using AwsSsh.Plugins.Chef;
+using AwsSsh.Plugins.Putty;
 
 namespace AwsSsh
 {
@@ -26,6 +28,11 @@ namespace AwsSsh
 		{
 			InitializeComponent();
 			DataContext = App.Settings;
+			foreach (var source in App.InstanceCollection.InstanceSources)
+			{
+				if (!(source is PuttyInstanceSource))
+					tabControl.Items.Add(new TabItem { Header = source.Name, Content = source.SettingsControl, Tag = source, DataContext = source.Settings });
+			}
 		}
 
 		private void OK_Click(object sender, RoutedEventArgs e)
@@ -33,8 +40,8 @@ namespace AwsSsh
 			try
 			{
 				Cursor = Cursors.Wait;
-				if (!App.CheckConfig()) return;
-				if (!AmazonInstanceSource.CheckConnection()) return;
+				//if (!CheckConfig()) return;
+				//if (!AmazonInstanceSource.CheckConnection()) return;
 				DialogResult = true;
 			}
 			finally
@@ -54,19 +61,16 @@ namespace AwsSsh
 		{
 			if (MessageBox.Show("All your settings and cache will be cleared and application will shutdown", "Clear data", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
 			{
-				File.Delete(InstanceCache.CacheFile);
-				App.Settings.Clear();
-				App.DontSaveSettings = true;
-				App.Current.Shutdown();
+				App.ClearSettingsAndExit();
 			}
 		}
 
 		private void ClearList_Click(object sender, RoutedEventArgs e)
 		{
-			MainWindowViewModel.instance.InstanceCollection.Instances.Clear();
+			App.InstanceCollection.Instances.Clear();
 		}
 
-		private void showShareMenu(object sender, MouseButtonEventArgs e)
+		private void ShowShareMenu(object sender, MouseButtonEventArgs e)
 		{
 			shareMenu.PlacementTarget = shareButton;
 			shareMenu.IsOpen = true;
@@ -81,5 +85,48 @@ namespace AwsSsh
 			b.ContextMenu.IsOpen = true;
 		}
 
+		private void CreateSource(object sender, RoutedEventArgs e)
+		{
+			var type = (sender as MenuItem).Tag as string;
+			IInstanceSource source;
+			switch (type)
+			{
+				case "Amazon":
+					source = new AmazonInstanceSource();
+					break;
+				case "Chef":
+					source = new ChefInstanceSource();
+					break;
+				default:
+					return;
+			}
+
+			App.Settings.InstanceSourcesSettings.Add(source.Settings);
+			App.InstanceCollection.InstanceSources.Add(source);
+			tabControl.Items.Add(new TabItem { Header = source.Name, Content = source.SettingsControl, Tag = source, DataContext = source.Settings });
+		}
+
+		private void DeleteSourceClick(object sender, RoutedEventArgs e)
+		{
+			var source = (tabControl.SelectedItem as TabItem).Tag as IInstanceSource;
+			if (source == null)
+				return;
+			if (MessageBox.Show("Are you sure you want to delete this source", "Warning", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+			{
+				App.Settings.InstanceSourcesSettings.Remove(source.Settings);
+				App.InstanceCollection.InstanceSources.Remove(source);
+				tabControl.Items.Remove(tabControl.SelectedItem);
+			}
+		}
+
+		public static bool CheckConfig()
+		{
+			if (!File.Exists(App.Settings.PuttyPath))
+			{
+				ExceptionDialog.Show("Putty not found. Please check your configuration");
+				return false;
+			}
+			return true;
+		}
 	}
 }

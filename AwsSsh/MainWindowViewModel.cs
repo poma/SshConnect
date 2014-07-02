@@ -10,7 +10,6 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
 using System.Xml.Serialization;
-using AwsSsh.ApplicationSettings;
 using System.Configuration;
 using AwsSsh.Plugins.Amazon;
 using System.Threading;
@@ -25,18 +24,7 @@ namespace AwsSsh
 
 		#region Properties
 
-		private InstanceCollection _instanceCollection;
-		public InstanceCollection InstanceCollection
-		{
-			get { return _instanceCollection; }
-		}
-
 		private DispatcherTimer _updateTimer;
-
-		public Settings Settings
-		{
-			get { return App.Settings; }
-		}
 
 		private string _searchText;
 		public string SearchText
@@ -61,7 +49,7 @@ namespace AwsSsh
 				if (_instanceCollectionView == null)
 				{
 					_instanceCollectionView = new CollectionViewSource();
-					_instanceCollectionView.Source = _instanceCollection.Instances;
+					_instanceCollectionView.Source = App.InstanceCollection.Instances;
 					_instanceCollectionView.Filter += CollectionViewSource_Filter;
 				}
 				return _instanceCollectionView;
@@ -97,13 +85,12 @@ namespace AwsSsh
 		public MainWindowViewModel()
 		{
 			instance = this;
-			_instanceCollection = new InstanceCollection();
 
 			if (!InstanceCollectionView.View.IsEmpty)
 				SelectedIndex = 0;
 
 			_updateTimer = new DispatcherTimer { IsEnabled = true, Interval = TimeSpan.FromSeconds(App.Settings.UpdateInterval) };
-			_updateTimer.Tick += (obj, args) => { _instanceCollection.RefreshList(); };
+			_updateTimer.Tick += (obj, args) => { App.InstanceCollection.RefreshList(); };
 		}
 
 		private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
@@ -125,9 +112,6 @@ namespace AwsSsh
 		public ICommand RefreshListCommand { get { return new RelayCommand(DoRefreshList); } }
 		public ICommand CopyCurrentCommand { get { return new RelayCommand(CopyCurrent); } }
 
-		
-
-
 		public void ShowPreferences()
 		{
 			new SettingsDialog().ShowDialog();
@@ -145,18 +129,12 @@ namespace AwsSsh
 		public void DoRefreshList()
 		{
 			_updateTimer.IsEnabled = true;
-			_instanceCollection.RefreshList();
-		}
-
-		public void Close()
-		{
-			if (!App.DontSaveSettings)
-				InstanceCache.Save(InstanceCollection.Instances);
+			App.InstanceCollection.RefreshList();
 		}
 		public void RunInstance(Instance instance)
 		{
 			var success = instance.Run();
-			if (success && Settings.CloseOnConnect)
+			if (success && App.Settings.CloseOnConnect)
 				Application.Current.Shutdown();
 		}
 		public void CopyCurrent()

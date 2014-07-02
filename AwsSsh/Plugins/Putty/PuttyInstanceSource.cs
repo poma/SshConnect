@@ -4,11 +4,26 @@ using System.Linq;
 using System.Text;
 using System.Collections.ObjectModel;
 using Microsoft.Win32;
+using AwsSsh.Plugins.Chef;
+using System.Windows.Controls;
 
 namespace AwsSsh.Plugins.Putty
 {
 	public class PuttyInstanceSource : IInstanceSource
 	{
+		public string Name { get { return "Putty"; } }
+
+		public SettingsBase Settings
+		{
+			get { return null; }
+			set { }
+		}
+
+		public Control SettingsControl
+		{
+			get	{ return null; }
+		}
+
 		private List<string> puttySessions;
 
 		public List<Instance> GetInstanceList()

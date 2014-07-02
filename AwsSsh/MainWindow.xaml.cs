@@ -10,7 +10,6 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
 using System.Xml.Serialization;
-using AwsSsh.ApplicationSettings;
 using System.Configuration;
 using AwsSsh.Plugins.Amazon;
 using System.Threading;
@@ -37,8 +36,6 @@ namespace AwsSsh
 			DataContext = _model;
 
 			InitializeComponent();
-
-			Closing += (obj, args) => { _model.Close(); };
 
 			// Return focus for mouse clicks etc.
 			//new DispatcherTimer { IsEnabled = true, Interval = TimeSpan.FromMilliseconds(200) }

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AwsSsh.ApplicationSettings
+namespace AwsSsh
 {
 	[Serializable]
 	public class DefaultValueAttribute : Attribute
