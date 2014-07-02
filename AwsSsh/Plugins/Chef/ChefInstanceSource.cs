@@ -13,14 +13,23 @@ namespace AwsSsh.Plugins.Chef
 			string jsonString = ChefClient.ChefRequest("/search/node");
 			var json = new JsonObject(Json.JsonDecode(jsonString));
 			var instances = json["rows"].ToArray()
-				.Where(s => !s["automatic"].ToDictionary().ContainsKey("cloud"))
+				//.Where(s => !s["automatic"].ToDictionary().ContainsKey("cloud"))
 				.Select(s => new ChefInstance
 				{
 					Name = (string)s["name"],
-					Endpoint = (string)s["automatic"]["ipaddress"],
+					Endpoint = (string)(s["automatic"]["cloud"] != null ? s["automatic"]["cloud"]["public_ipv4"] : s["automatic"]["ipaddress"]),
 					LastUpdate = DateTimeFromUnixTime((int)s["automatic"]["ohai_time"])
 				})
 				.Cast<Instance>().ToList();
+			//var instances2 = json["rows"].ToArray()
+			//	.Where(s => s["automatic"].ToDictionary().ContainsKey("cloud"))
+			//	.Select(s => new ChefInstance
+			//	{
+			//		Name = (string)s["name"],
+			//		Endpoint = (string)s["automatic"]["ipaddress"],
+			//		LastUpdate = DateTimeFromUnixTime((int)s["automatic"]["ohai_time"])
+			//	})
+			//	.Cast<Instance>().ToList();
 			return instances;
 		}
 
