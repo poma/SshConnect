@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="AwsSsh.Plugins.Chef.ChefSettingsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+	<StackPanel Margin="8">
+		<StackPanel.Resources>
+			<Style TargetType="DockPanel">
+				<Setter Property="Margin" Value="4" />
+			</Style>
+			<Style TargetType="TextBlock">
+				<Setter Property="Width" Value="130" />
+				<Setter Property="VerticalAlignment" Value="Center" />
+				<Setter Property="TextAlignment" Value="Left" />
+				<Setter Property="Margin" Value="0, 0, 8, 0" />
+			</Style>
+		</StackPanel.Resources>
+
+		<DockPanel>
+			<TextBlock Text="Chef server url:" />
+			<TextBox Text="{Binding ChefUrl}" />
+		</DockPanel>
+
+		<DockPanel>
+			<TextBlock Text="Chef private key:" />
+			<TextBox Text="{Binding ChefKey}" />
+		</DockPanel>
+
+		<DockPanel>
+			<TextBlock Text="Chef user:" />
+			<TextBox Text="{Binding ChefUser}" />
+		</DockPanel>
+	</StackPanel>
+</UserControl>

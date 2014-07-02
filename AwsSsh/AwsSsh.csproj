@@ -64,15 +64,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="InstanceCollection.cs" />
+    <Compile Include="Model\CopyPropertyAttribute.cs" />
+    <Compile Include="Model\InstanceCache.cs" />
+    <Compile Include="Model\InstanceCollection.cs" />
     <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="MvvmFoundation\ObservableObject.cs" />
     <Compile Include="Plugins\Amazon\AmazonInstance.cs" />
     <Compile Include="ExceptionDialog.xaml.cs">
       <DependentUpon>ExceptionDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="InstanceSource.cs" />
-    <Compile Include="Plugins\Amazon\AmazonInstanceSource.cs" />
+    <Compile Include="Model\IInstanceSource.cs" />
+    <Compile Include="Plugins\Chef\ChefSettings.cs" />
+    <Compile Include="Plugins\Chef\ChefSettingsControl.xaml.cs">
+      <DependentUpon>ChefSettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Plugins\Chef\Json.cs" />
     <Compile Include="Plugins\Chef\JsonObject.cs" />
     <Compile Include="Plugins\Chef\ChefClient.cs" />
@@ -82,7 +87,7 @@
     <Compile Include="Plugins\Putty\PuttyInstanceSource.cs" />
     <Compile Include="MvvmFoundation\PropertyObserver.cs" />
     <Compile Include="MvvmFoundation\RelayCommand.cs" />
-    <Compile Include="StateColor.cs" />
+    <Compile Include="Model\StateColor.cs" />
     <Compile Include="XmlUtils.cs" />
     <Compile Include="Settings\DefaultValueAttribute.cs" />
     <Compile Include="Settings\Settings.cs" />
@@ -98,19 +103,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Plugins\Amazon\AmazonClient.cs" />
+    <Compile Include="Plugins\Amazon\AmazonInstanceSource.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="GifImage.cs" />
-    <Compile Include="Instance.cs" />
-    <Compile Include="Plugins\Amazon\AmazonInstanceComparer.cs" />
+    <Compile Include="Model\Instance.cs" />
     <Compile Include="Plugins\Amazon\AmazonInstatnceStates.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Plugins\Chef\ChefSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SettingsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

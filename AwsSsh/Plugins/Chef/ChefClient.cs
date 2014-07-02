@@ -5,11 +5,8 @@ using System.Text;
 using System.Net;
 using System.Security.Cryptography;
 using System.IO;
-using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Crypto.Encodings;
-using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.OpenSsl;
 
 namespace AwsSsh.Plugins.Chef
@@ -27,7 +24,6 @@ namespace AwsSsh.Plugins.Chef
 			client.Headers.Add("X-Ops-Content-Hash", Hash(""));
 			client.Headers.Add("X-Ops-Sign", "algorithm=sha1;version=1.0");
 
-			//"Method:HTTP_METHOD\nHashed Path:HASHED_PATH\nX-Ops-Content-Hash:HASHED_BODY\nX-Ops-Timestamp:TIME\nX-Ops-UserId:USERID"
 			var headers = String.Format("Method:GET\nHashed Path:{3}\nX-Ops-Content-Hash:{0}\nX-Ops-Timestamp:{1}\nX-Ops-UserId:{2}", Hash(""), date, App.Settings.ChefUser, Hash(path));
 
 			var sign = Sign(headers);

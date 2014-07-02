@@ -8,11 +8,13 @@ namespace AwsSsh
 	[Serializable]
 	public class AmazonInstance : Instance
 	{
+		[CopyProperty]
 		public string Id { get; set; }
 
 		#region Properties
 
 		private AmazonInstatnceStates _state;
+		[CopyProperty]
 		public AmazonInstatnceStates State
 		{
 			get { return _state; }
@@ -31,6 +33,7 @@ namespace AwsSsh
 		}
 
 		private string _publicIp;
+		[CopyProperty]
 		public string PublicIp
 		{
 			get { return _publicIp; }
@@ -39,10 +42,12 @@ namespace AwsSsh
 				if (_publicIp == value) return;
 				_publicIp = value;
 				OnPropertyChanged("PublicIp");
+				OnPropertyChanged("Tooltip");
 			}
 		}
 
 		private string _privateIp;
+		[CopyProperty]
 		public string PrivateIp
 		{
 			get { return _privateIp; }
@@ -51,11 +56,13 @@ namespace AwsSsh
 				if (_privateIp == value) return;
 				_privateIp = value;
 				OnPropertyChanged("PrivateIp");
+				OnPropertyChanged("Tooltip");
 			}
 		}
 
 
 		private string _instanceType;
+		[CopyProperty]
 		public string InstanceType
 		{
 			get { return _instanceType; }
@@ -64,10 +71,12 @@ namespace AwsSsh
 				if (_instanceType == value) return;
 				_instanceType = value;
 				OnPropertyChanged("InstanceType");
+				OnPropertyChanged("Tooltip");
 			}
 		}
 
 		private string _publicDnsName;
+		[CopyProperty]
 		public string PublicDnsName
 		{
 			get { return _publicDnsName; }
@@ -76,10 +85,12 @@ namespace AwsSsh
 				if (_publicDnsName == value) return;
 				_publicDnsName = value;
 				OnPropertyChanged("PublicDnsName");
+				OnPropertyChanged("Tooltip");
 			}
 		}
 
 		private string _privateDnsName;
+		[CopyProperty]
 		public string PrivateDnsName
 		{
 			get { return _privateDnsName; }
@@ -88,6 +99,7 @@ namespace AwsSsh
 				if (_privateDnsName == value) return;
 				_privateDnsName = value;
 				OnPropertyChanged("PrivateDnsName");
+				OnPropertyChanged("Tooltip");
 			}
 		}
 
@@ -115,19 +127,9 @@ namespace AwsSsh
 			get { return PublicIp; }
 		}
 
-		/// <summary>
-		/// Used to merge new instance info but retain references
-		/// </summary>
-		public static void AssignInstance(AmazonInstance Src, AmazonInstance New)
+		public override string GetId()
 		{
-			Src.Name = New.Name;
-			Src.StateName = New.StateName;
-			Src.State = New.State;
-			Src.PublicIp = New.PublicIp;
-			Src.PrivateIp = New.PrivateIp;
-			Src.InstanceType = New.InstanceType;
-			Src.PublicDnsName = New.PublicDnsName;
-			Src.PrivateDnsName = New.PrivateDnsName;
+			return Id;
 		}
 
 		private void UpdateStateColor()

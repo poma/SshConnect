@@ -151,7 +151,7 @@ namespace AwsSsh
 		public void Close()
 		{
 			if (!App.DontSaveSettings)
-				_instanceCollection.SaveInstanceCache();
+				InstanceCache.Save(InstanceCollection.Instances);
 		}
 		public void RunInstance(Instance instance)
 		{

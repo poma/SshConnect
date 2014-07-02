@@ -12,6 +12,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Diagnostics;
 using System.IO;
+using AwsSsh.Plugins.Amazon;
+using System.Windows.Controls.Primitives;
 
 namespace AwsSsh
 {
@@ -32,7 +34,7 @@ namespace AwsSsh
 			{
 				Cursor = Cursors.Wait;
 				if (!App.CheckConfig()) return;
-				if (!AmazonClient.CheckConnection()) return;
+				if (!AmazonInstanceSource.CheckConnection()) return;
 				DialogResult = true;
 			}
 			finally
@@ -52,7 +54,7 @@ namespace AwsSsh
 		{
 			if (MessageBox.Show("All your settings and cache will be cleared and application will shutdown", "Clear data", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
 			{
-				File.Delete(InstanceCollection.CacheFile);
+				File.Delete(InstanceCache.CacheFile);
 				App.Settings.Clear();
 				App.DontSaveSettings = true;
 				App.Current.Shutdown();
@@ -66,7 +68,17 @@ namespace AwsSsh
 
 		private void showShareMenu(object sender, MouseButtonEventArgs e)
 		{
+			shareMenu.PlacementTarget = shareButton;
 			shareMenu.IsOpen = true;
+		}
+
+		private void ShowButtonMenu(object sender, RoutedEventArgs e)
+		{
+			var b = sender as Button;
+			if (b == null || b.ContextMenu == null)
+				return;
+			b.ContextMenu.PlacementTarget = b;
+			b.ContextMenu.IsOpen = true;
 		}
 
 	}

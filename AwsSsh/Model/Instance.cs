@@ -12,7 +12,15 @@ namespace AwsSsh
 	[DebuggerDisplay("Name = {_name}")]
 	public class Instance : INotifyPropertyChanged
 	{
+		private IInstanceSource _source;
+		public IInstanceSource Source
+		{
+			get { return _source; }
+			set { _source = value; }
+		}
+
 		private string _name;
+		[CopyProperty]
 		public virtual string Name
 		{
 			get
@@ -27,7 +35,13 @@ namespace AwsSsh
 			}
 		}
 
+		public virtual string GetId()
+		{
+			return Name;
+		}
+
 		private string _stateName = "Unknown";
+		[CopyProperty]
 		public virtual string StateName
 		{
 			get
@@ -43,6 +57,7 @@ namespace AwsSsh
 		}
 
 		private StateColor _stateColor = StateColor.Gray;
+		[CopyProperty]
 		public virtual StateColor StateColor
 		{
 			get { return _stateColor; }

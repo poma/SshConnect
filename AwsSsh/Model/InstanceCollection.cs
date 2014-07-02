@@ -22,9 +22,7 @@ using AwsSsh.Plugins.Chef;
 namespace AwsSsh
 {
 	public class InstanceCollection: ObservableObject
-	{
-		public static readonly string CacheFile = Path.Combine(Path.GetTempPath(), "AwsSsh.cache.xml");
-
+	{		
 		private int _loadingCount;
 
         private bool isLoading;
@@ -50,8 +48,8 @@ namespace AwsSsh
 			}
 		}
 
-		private List<InstanceSource> _instanceSources;
-		public List<InstanceSource> InstanceSources
+		private List<IInstanceSource> _instanceSources;
+		public List<IInstanceSource> InstanceSources
 		{
 			get { return _instanceSources; }
 			set
@@ -64,15 +62,17 @@ namespace AwsSsh
 
 		public InstanceCollection()
 		{
-			InstanceSources = new List<InstanceSource>
+			InstanceSources = new List<IInstanceSource>
 			{
 				new AmazonInstanceSource(),
-				new PuttyInstanceSource(),
-				new ChefInstanceSource()
+				//new PuttyInstanceSource(),
+				//new ChefInstanceSource()
 			};
 
 			// todo: wrap exceptions
-			LoadInstanceCache();
+			var list = InstanceCache.Load();
+			if (list != null)
+				list.ForEach(a => Instances.Add(a));
 			RefreshList();
 		}
 
@@ -85,7 +85,7 @@ namespace AwsSsh
 				BackgroundWorker w = new BackgroundWorker();
 				IsLoading = true;
 				_loadingCount++;
-				w.DoWork += (obj, args) => args.Result = new Tuple<InstanceSource, List<Instance>>(args.Argument as InstanceSource, (args.Argument as InstanceSource).GetInstanceList()) ;
+				w.DoWork += (obj, args) => args.Result = new Tuple<IInstanceSource, List<Instance>>(args.Argument as IInstanceSource, (args.Argument as IInstanceSource).GetInstanceList()) ;
 				w.RunWorkerCompleted += (obj, args) =>
 				{
 					_loadingCount--;
@@ -98,22 +98,9 @@ namespace AwsSsh
 					}
 					var previousSelection = MainWindow.instance.listBox.SelectedItem as Instance;
 
-					var res = args.Result as Tuple<InstanceSource, List<Instance>>;
-					var newInstances = res.Item2;
+					var res = args.Result as Tuple<IInstanceSource, List<Instance>>;
 					using (MainWindowViewModel.instance.InstanceCollectionView.DeferRefresh())
-						res.Item1.MergeInstanceList(Instances, newInstances);
-
-					//if (MainWindow.instance.listBox.Items.Count > 0)
-					//{
-					//	if (previousSelection != null)
-					//	{
-					//		int ind = MainWindow.instance.listBox.Items.OfType<Instance>().Select(i => i.Name).ToList().IndexOf(previousSelection.Name);
-					//		if (ind < 0) ind = 0;
-					//		MainWindow.instance.listBox.SelectedIndex = ind;
-					//	}
-					//	else
-					//		MainWindow.instance.listBox.SelectedIndex = 0;
-					//}
+						MergeInstances(res.Item1, res.Item2);
 
 					if (MainWindow.instance.listBox.Items.Count > 0)
 						if (previousSelection != null && MainWindow.instance.listBox.Items.Contains(previousSelection))
@@ -125,48 +112,28 @@ namespace AwsSsh
 			}
 		}
 
-		public static Type[] GetSerializedTypes()
+		public void MergeInstances(IInstanceSource src, List<Instance> newInstances)
 		{
-			return Assembly.GetExecutingAssembly().GetTypes().Where(t => typeof(Instance).IsAssignableFrom(t)).ToArray();			
+			var existingInstances = Instances;
+			var c = new InstanceComparer();
+			var itemsToRemove = existingInstances.Where(a => a.Source == src).Except(newInstances, c).ToList();
+			var itemsToAdd = newInstances.Except(existingInstances, c).ToList();
+			var itemsToUpdate = existingInstances.Where(a => a.Source == src).Join(newInstances, a => a.GetId(), a => a.GetId(), (a, b) => new { Old = a, New = b }).ToList();
+			itemsToAdd.ForEach(a => existingInstances.Add(a));
+			itemsToRemove.ForEach(a => existingInstances.Remove(a));
+			itemsToUpdate.ForEach(a => CopyPropertyAttribute.CopyProperties(a.New, a.Old));
 		}
 
-		public void LoadInstanceCache()
+		public class InstanceComparer : IEqualityComparer<Instance>
 		{
-			if (!File.Exists(CacheFile)) return;
-			try
+			public bool Equals(Instance x, Instance y)
 			{
-				using (TextReader textReader = new StreamReader(CacheFile))
-				{
-					XmlSerializer deserializer = new XmlSerializer(typeof(List<Instance>), GetSerializedTypes());
-					var instances = (List<Instance>)deserializer.Deserialize(textReader);
-					textReader.Close();
-					instances.ForEach(a => Instances.Add(a));
-				}
+				return x != null && y != null && x.GetId() == y.GetId();
 			}
-			catch { } // I know that this is bad
-		}
-		public void SaveInstanceCache()
-		{
-			try
+
+			public int GetHashCode(Instance obj)
 			{
-				using (TextWriter textWriter = new StreamWriter(CacheFile))
-				{
-					XmlSerializer serializer = new XmlSerializer(typeof(List<Instance>), GetSerializedTypes());
-					serializer.Serialize(textWriter, Instances.ToList());
-					textWriter.Close();
-				}
-			}
-			catch (Exception ex)
-			{
-				try
-				{
-					do
-					{
-						File.AppendAllText(CacheFile, String.Format("\r\n\r\n{0}\r\n{1}", ex.Message, ex.StackTrace));
-						ex = ex.InnerException;
-					} while (ex != null);
-				}
-				catch { } // I know that this is bad
+				return obj.GetId().GetHashCode();
 			}
 		}
 	}
