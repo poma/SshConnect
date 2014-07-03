@@ -77,19 +77,7 @@ namespace AwsSsh
 			App.Current.Shutdown();
 		}
 
-		private static Assembly LoadEmbeddedDll(string name)
-        {
-			using (var stream = Application.GetResourceStream(new Uri(name, UriKind.Relative)).Stream)
-				using (var mem = new MemoryStream())
-				{
-					var gzip = new GZipStream(stream, CompressionMode.Decompress);
-					gzip.CopyTo(mem);
-					var buf = mem.ToArray();
-					return Assembly.Load(buf);
-				}
-        }
-
-		Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+		private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
 		{
 			if (args.Name.Contains("AWSSDK")) 
 				return LoadEmbeddedDll("AWSSDK.dll.gz");
@@ -98,6 +86,18 @@ namespace AwsSsh
 				return LoadEmbeddedDll("BouncyCastle.Crypto.dll.gz");
 			
 			return null;
+		}
+
+		private static Assembly LoadEmbeddedDll(string name)
+		{
+			using (var stream = Application.GetResourceStream(new Uri(name, UriKind.Relative)).Stream)
+				using (var mem = new MemoryStream())
+				{
+					var gzip = new GZipStream(stream, CompressionMode.Decompress);
+					gzip.CopyTo(mem);
+					var buf = mem.ToArray();
+					return Assembly.Load(buf);
+				}
 		}
 
 	}
