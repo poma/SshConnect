@@ -1,13 +1,13 @@
-AwsSsh 1.4
+SshConnect 2.0
 ==========
 
-A nice windows tool that lets you quickly SSH to your Amazon EC2 instances using Putty. Has built-in search that helps a lot when you have many instances.
+A nice windows tool that lets you quickly SSH to your Amazon EC2 or Chef-managed instances using Putty. Has built-in search that helps a lot when you have many instances.
 
-![Screenshot](https://raw.github.com/poma/AwsSsh/master/Screenshots/Screenshot1.png)
+![Screenshot](https://raw.github.com/poma/SshConnect/master/Screenshots/Screenshot1.png)
 
 Download
 ------------
-You can download compiled version from [downloads page](https://github.com/poma/AwsSsh/downloads)
+You can download compiled version from [downloads page](https://github.com/poma/SshConnect/downloads)
 
 
 Requirements
