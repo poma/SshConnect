@@ -40,7 +40,6 @@ namespace AwsSsh
 			DispatcherUnhandledException += ExceptionDialog.Handler;
 			AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 			_instanceCollection = new InstanceCollection(Settings.InstanceSources.Cast<IInstanceSource>().ToList());
-			var t = Settings.ShowPuttyButton;
 
 			if (Settings.IsFirstTimeConfiguration)
 			{
@@ -94,6 +93,9 @@ namespace AwsSsh
 		{
 			if (args.Name.Contains("AWSSDK")) 
 				return LoadEmbeddedDll("AWSSDK.dll.gz");
+
+			if (args.Name.Contains("BouncyCastle"))
+				return LoadEmbeddedDll("BouncyCastle.Crypto.dll.gz");
 			
 			return null;
 		}

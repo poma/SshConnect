@@ -12,7 +12,7 @@ namespace AwsSsh
 	{
 		public static readonly string CacheFile = "Cache.xml";
 
-		public static Type[] GetSerializedTypes()
+		private static Type[] GetSerializedTypes()
 		{
 			return Assembly.GetExecutingAssembly().GetTypes().Where(t => typeof(Instance).IsAssignableFrom(t)).ToArray();
 		}
@@ -51,7 +51,7 @@ namespace AwsSsh
 				{
 					XmlSerializer deserializer = new XmlSerializer(typeof(List<Instance>), GetSerializedTypes());
 					var list = (List<Instance>)deserializer.Deserialize(textReader);
-					//list.ForEach()
+					list = list.Where(a => a.Source != null).ToList();
 					return list;
 				}
 			}

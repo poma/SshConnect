@@ -24,14 +24,14 @@ namespace AwsSsh
 	{		
 		private int _loadingCount;
 
-        private bool isLoading;
+        private bool _isLoading;
 		public bool IsLoading
 		{
-			get { return isLoading; }
+			get { return _isLoading; }
 			set
 			{
-				if (isLoading == value) return;
-				isLoading = value;
+				if (_isLoading == value) return;
+				_isLoading = value;
 				OnPropertyChanged("IsLoading");
 			}
 		}

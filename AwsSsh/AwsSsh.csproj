@@ -43,8 +43,11 @@
     <Reference Include="AWSSDK, Version=1.4.11.0, Culture=neutral, PublicKeyToken=cd2d24cd2bace800, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\AWSSDK.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="BouncyCastle.Crypto, Version=1.7.4114.6375, Culture=neutral, PublicKeyToken=0e99375e54769942" />
+    <Reference Include="BouncyCastle.Crypto, Version=1.7.4114.6375, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -150,7 +153,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Resource Include="AWSSDK.dll.gz" />
+    <Resource Include="lib\AWSSDK.dll.gz" />
+    <Resource Include="lib\BouncyCastle.Crypto.dll.gz" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -173,7 +177,7 @@
     <Resource Include="Resources\refresh.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="AWSSDK.dll" />
+    <None Include="lib\AWSSDK.dll" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\settings.png" />
@@ -194,7 +198,7 @@
     <Resource Include="Resources\blue.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="BouncyCastle.Crypto.dll" />
+    <Content Include="lib\BouncyCastle.Crypto.dll" />
     <Resource Include="Resources\error_small.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

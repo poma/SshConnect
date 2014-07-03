@@ -37,10 +37,12 @@ namespace AwsSsh.Plugins.Amazon
 		{
 			var src = new AmazonInstanceSource { Settings = DataContext as AmazonSettings };
 			testConnectionButton.IsEnabled = false;
+			(Parent as Control).Cursor = Cursors.Wait;
 			Task.Factory.StartNew(() => src.GetInstanceList())
 				.ContinueWith(t =>
 				{
 					testConnectionButton.IsEnabled = true;
+					(Parent as Control).Cursor = Cursors.Arrow;
 					if (t.Exception != null)
 						ExceptionDialog.Show(t.Exception);
 					else

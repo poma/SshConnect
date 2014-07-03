@@ -49,47 +49,36 @@ namespace AwsSsh
 
 		public void Save()
 		{
-			//try
-			//{
+			try
+			{
 				using (TextWriter textWriter = new StreamWriter(SettingsFile))
 				{
 					XmlSerializer serializer = new XmlSerializer(typeof(SettingsBase), GetSerializedTypes());
 					serializer.Serialize(textWriter, this);
 				}
-			//}
-			//catch (Exception ex)
-			//{
-			//	File.Delete(SettingsFile);
-			//	try
-			//	{
-			//		do
-			//		{
-			//			File.WriteAllText(SettingsFile + ".error.txt", String.Format("\r\n\r\n{0}\r\n{1}", ex.Message, ex.StackTrace));
-			//			ex = ex.InnerException;
-			//		} while (ex != null);
-			//	}
-			//	catch { } // I know that this is bad
-			//}
+			}
+			catch (Exception ex)
+			{
+				throw new ApplicationException("Error writing settings", ex);
+			}
 		}
 
 		public static SettingsBase Load()
 		{
 			if (!File.Exists(SettingsFile))
 				return null;
-			//try
-			//{
+			try
+			{
 				using (TextReader textReader = new StreamReader(SettingsFile))
 				{
 					XmlSerializer deserializer = new XmlSerializer(typeof(SettingsBase), GetSerializedTypes());
 					return (SettingsBase)deserializer.Deserialize(textReader);
 				}
-			//}
-			//catch
-			//{
-			//	// I know that this is bad
-			//	// Most probably this means that cache is corrupted
-			//	return null;
-			//}
+			}
+			catch (Exception ex)
+			{
+				throw new ApplicationException("Error reading settings", ex);
+			}
 		}
 
 		public void Clear()

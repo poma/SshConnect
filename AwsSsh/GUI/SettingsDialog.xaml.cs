@@ -31,7 +31,10 @@ namespace AwsSsh
 			foreach (var source in App.InstanceCollection.InstanceSources)
 			{
 				if (!(source is PuttyInstanceSource))
+				{
+					source.SettingsControl.Background = new SolidColorBrush(Colors.Transparent);
 					tabControl.Items.Add(new TabItem { Header = source.Name, Content = source.SettingsControl, Tag = source, DataContext = source.Settings });
+				}
 			}
 		}
 
@@ -108,6 +111,7 @@ namespace AwsSsh
 
 			App.Settings.InstanceSources.Add(source);
 			App.InstanceCollection.InstanceSources.Add(source);
+			source.SettingsControl.Background = new SolidColorBrush(Colors.Transparent);
 			var tab = new TabItem { Header = source.Name, Content = source.SettingsControl, Tag = source, DataContext = source.Settings };
 			tabControl.Items.Add(tab);
 			tabControl.SelectedItem = tab;
