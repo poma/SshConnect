@@ -50,8 +50,18 @@
 		</DockPanel>
 
 		<DockPanel>
-			<TextBlock Text="Default user:" />
-			<TextBox Text="{Binding DefaultUser}" />
+			<TextBlock Text="Ssh user:" />
+			<TextBox Text="{Binding SshUser}" />
+		</DockPanel>
+
+		<DockPanel>
+			<TextBlock Text="Ssh key:" />
+			<TextBox Text="{Binding SshKey}" />
+		</DockPanel>
+
+		<DockPanel>
+			<TextBlock Text="Ssh arguments:" />
+			<TextBox Text="{Binding SshArguments}" />
 		</DockPanel>
 	</StackPanel>
 </UserControl>

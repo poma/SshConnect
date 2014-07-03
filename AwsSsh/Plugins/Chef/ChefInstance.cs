@@ -54,7 +54,8 @@ namespace AwsSsh.Plugins.Chef
 
 		public override bool Run()
 		{
-			RunPutty(String.Format(@"-ssh {0} -P 220 -l root -i ""{1}""", Endpoint, App.Settings.KeyPath));
+			var session = string.IsNullOrWhiteSpace(App.Settings.PuttySession) ? "" : String.Format("-load \"{0}\"", App.Settings.PuttySession);
+			RunPutty(String.Format(@"{0} -ssh {1} -l {2} -i ""{3}"" {4}", session, Endpoint, Settings.SshUser, Settings.SshKey, Settings.SshArguments));
 			return true;
 		}
 	}

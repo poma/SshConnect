@@ -112,7 +112,7 @@ namespace AwsSsh.Plugins.Amazon
 		{
 			if (string.IsNullOrEmpty(PublicIp)) return false; // offline instancces
 			var session = string.IsNullOrWhiteSpace(App.Settings.PuttySession) ? "" : String.Format("-load \"{0}\"", App.Settings.PuttySession);
-			RunPutty(String.Format(@"{0} -ssh {1} -l {2} -i ""{3}"" {4}", session, PublicIp, Settings.DefaultUser, App.Settings.KeyPath, App.Settings.CommandLineArgs));
+			RunPutty(String.Format(@"{0} -ssh {1} -l {2} -i ""{3}"" {4}", session, PublicIp, Settings.SshUser, Settings.SshKey, Settings.SshArguments));
 			return true;
 		}
 

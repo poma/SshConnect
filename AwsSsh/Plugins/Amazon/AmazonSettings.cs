@@ -17,6 +17,12 @@ namespace AwsSsh.Plugins.Amazon
 		public string ServiceUrl { get; set; }
 
 		[DefaultValue("ubuntu")]
-		public string DefaultUser { get; set; }
+		public string SshUser { get; set; }
+
+		[DefaultValue("C:\\certificate.ppk")]
+		public string SshKey { get; set; }
+
+		[DefaultValue("")]
+		public string SshArguments { get; set; }
 	}
 }

@@ -83,16 +83,6 @@
 					</DockPanel>
 
 					<DockPanel>
-						<TextBlock Text="Path to ssh key file:*" />
-						<TextBox Text="{Binding KeyPath}" />
-					</DockPanel>
-
-					<DockPanel>
-						<TextBlock Text="Additional putty args:" />
-						<TextBox Text="{Binding CommandLineArgs}" />
-					</DockPanel>
-
-					<DockPanel>
 						<TextBlock Text=" " />
 						<CheckBox IsChecked="{Binding CloseOnConnect}" Content="Close on connect" />
 					</DockPanel>

@@ -13,14 +13,8 @@ namespace AwsSsh
 		[DefaultValue("")]
 		public string PuttySession { get; set; }
 
-		[DefaultValue("")]
-		public string CommandLineArgs { get; set; }
-
 		[DefaultValue(true)]
 		public bool CloseOnConnect { get; set; }
-
-		[DefaultValue("C:\\certificate.ppk")]
-		public string KeyPath { get; set; }
 
 		[DefaultValue(10)]
 		public int UpdateInterval { get; set; }
