@@ -12,6 +12,7 @@ using System.Windows.Controls;
 
 namespace AwsSsh.Plugins.Amazon
 {
+	[Serializable]
 	public class AmazonInstanceSource: IInstanceSource
 	{
 		public string Name { get { return "Amazon"; } }
@@ -58,7 +59,7 @@ namespace AwsSsh.Plugins.Amazon
 					var nameTag = image.Tag.Where(t => t.Key == "Name").FirstOrDefault();
 					var name = nameTag != null ? nameTag.Value : image.InstanceId;
 
-					var instance = new AmazonInstance()
+					var instance = new AmazonInstance
 					{
 						Source = this,
 						Id = image.InstanceId,

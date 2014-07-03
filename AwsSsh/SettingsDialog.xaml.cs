@@ -101,7 +101,7 @@ namespace AwsSsh
 					return;
 			}
 
-			App.Settings.InstanceSourcesSettings.Add(source.Settings);
+			App.Settings.InstanceSources.Add(source);
 			App.InstanceCollection.InstanceSources.Add(source);
 			tabControl.Items.Add(new TabItem { Header = source.Name, Content = source.SettingsControl, Tag = source, DataContext = source.Settings });
 		}
@@ -113,7 +113,7 @@ namespace AwsSsh
 				return;
 			if (MessageBox.Show("Are you sure you want to delete this source", "Warning", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
 			{
-				App.Settings.InstanceSourcesSettings.Remove(source.Settings);
+				App.Settings.InstanceSources.Remove(source);
 				App.InstanceCollection.InstanceSources.Remove(source);
 				tabControl.Items.Remove(tabControl.SelectedItem);
 			}

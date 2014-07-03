@@ -15,6 +15,19 @@ namespace AwsSsh
 		private const string SettingsFile = "Settings.xml";
 		private List<PropertyDescriptionInfo> _properties;
 
+		private Guid _guid;
+		public Guid Guid
+		{
+			get 
+			{
+				if (_guid == Guid.Empty)
+					_guid = Guid.NewGuid();
+				return _guid; 
+			}
+			set { _guid = value; }
+		}
+		
+
 		protected SettingsBase()
 		{
 			_properties = GetUserProperties();
@@ -23,7 +36,7 @@ namespace AwsSsh
 
 		private static Type[] GetSerializedTypes()
 		{
-			return Assembly.GetExecutingAssembly().GetTypes().Where(t => typeof(SettingsBase).IsAssignableFrom(t)).ToArray();
+			return Assembly.GetExecutingAssembly().GetTypes().Where(t => typeof(SettingsBase).IsAssignableFrom(t) || typeof(IInstanceSource).IsAssignableFrom(t) && !t.IsInterface).ToArray();
 		}
 
 		private List<PropertyDescriptionInfo> GetUserProperties()

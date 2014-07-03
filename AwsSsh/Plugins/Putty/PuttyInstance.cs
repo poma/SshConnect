@@ -21,14 +21,12 @@ namespace AwsSsh.Plugins.Putty
 			}
 		}
 
-		public PuttyInstance()
-		{
-			
-		}
+		public PuttyInstance() { }
 
-		public PuttyInstance(string name)
+		public PuttyInstance(IInstanceSource source, string name)
 		{
-			this.Name = name;
+			Name = name;
+			Source = source;
 		}
 	}
 }

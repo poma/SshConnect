@@ -22,6 +22,8 @@ namespace AwsSsh
 	{
 		public static MainWindowViewModel instance;
 
+		public Settings Settings { get { return App.Settings; }	}
+
 		#region Properties
 
 		private DispatcherTimer _updateTimer;
@@ -78,7 +80,7 @@ namespace AwsSsh
 				_selectedIndex = value;
 				OnPropertyChanged("SelectedIndex");
 			}
-		}	
+		}		
 		
 		#endregion
 
@@ -90,7 +92,7 @@ namespace AwsSsh
 				SelectedIndex = 0;
 
 			_updateTimer = new DispatcherTimer { IsEnabled = true, Interval = TimeSpan.FromSeconds(App.Settings.UpdateInterval) };
-			_updateTimer.Tick += (obj, args) => { App.InstanceCollection.RefreshList(); };
+			_updateTimer.Tick += (obj, args) => { DoRefreshList(); };
 		}
 
 		private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
@@ -111,6 +113,7 @@ namespace AwsSsh
 		public ICommand StartPuttyCommand { get { return new RelayCommand(StartPutty); } }
 		public ICommand RefreshListCommand { get { return new RelayCommand(DoRefreshList); } }
 		public ICommand CopyCurrentCommand { get { return new RelayCommand(CopyCurrent); } }
+		public ICommand ShowNextErrorCommand { get { return new RelayCommand(ShowNextError); } }
 
 		public void ShowPreferences()
 		{
@@ -141,6 +144,11 @@ namespace AwsSsh
 		{
 			if (SelectedItem != null && !string.IsNullOrWhiteSpace(SelectedItem.ClipboardText))
 				Clipboard.SetText(SelectedItem.ClipboardText);
+		}
+		public void ShowNextError()
+		{
+			while (App.InstanceCollection.ErrorsPresent)
+				ExceptionDialog.Show(App.InstanceCollection.GetNextException());			
 		}
 	}
 }

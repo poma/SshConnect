@@ -50,10 +50,12 @@ namespace AwsSsh
 				using (TextReader textReader = new StreamReader(CacheFile))
 				{
 					XmlSerializer deserializer = new XmlSerializer(typeof(List<Instance>), GetSerializedTypes());
-					return (List<Instance>)deserializer.Deserialize(textReader);
+					var list = (List<Instance>)deserializer.Deserialize(textReader);
+					//list.ForEach()
+					return list;
 				}
 			}
-			catch
+			catch (Exception e)
 			{
 				// I know that this is bad
 				// Most probably this means that cache is corrupted

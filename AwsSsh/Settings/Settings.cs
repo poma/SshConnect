@@ -66,11 +66,11 @@ namespace AwsSsh
 			}
 		}
 
-		private List<SettingsBase> _instanceSourcesSettings = new List<SettingsBase>();
-		public List<SettingsBase> InstanceSourcesSettings
+		private List<object> _instanceSources = new List<object>();
+		public List<object> InstanceSources
 		{
-			get { return _instanceSourcesSettings; }
-			set { _instanceSourcesSettings = value; }
+			get { return _instanceSources; }
+			set { _instanceSources = value; }
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

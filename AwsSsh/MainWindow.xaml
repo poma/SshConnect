@@ -58,32 +58,49 @@
 			<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
 			<Setter Property="HorizontalContentAlignment" Value="Stretch" />
 		</Style>
-		<Style x:Key="actionStyle" TargetType="Image">
-			<Style.Triggers>
-				<Trigger Property="IsMouseOver" Value="True">
-					<Setter Property="Opacity" Value="1" />
-					<Setter Property="Effect">
-						<Setter.Value>
-							<DropShadowEffect BlurRadius="2" ShadowDepth="0" Color="#FF000000" />
-						</Setter.Value>
-					</Setter>
-				</Trigger>
-			</Style.Triggers>
-		</Style>
 		<BooleanToVisibilityConverter x:Key="boolToVis" />
+		<Style x:Key="imageButton" TargetType="{x:Type Button}">
+			<EventSetter Event="Click" Handler="FocusTextBox" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Button}">
+						<Image Source="{Binding Path=Tag, RelativeSource={RelativeSource TemplatedParent}}" Name="content" VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="0.5" Width="16" Height="16" RenderTransformOrigin="0.5, 0.5" />
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter Property="Opacity" Value="1" />
+								<Setter Property="Effect">
+									<Setter.Value>
+										<DropShadowEffect BlurRadius="2" ShadowDepth="0" Color="#FF000000" />
+									</Setter.Value>
+								</Setter>
+							</Trigger>
+							<Trigger Property="IsPressed" Value="True">
+								<Setter Property="RenderTransform" TargetName="content">
+									<Setter.Value>
+										<ScaleTransform ScaleX=".92" ScaleY=".92" />
+									</Setter.Value>
+								</Setter>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
 	</Window.Resources>
 	<Grid>
 		<DockPanel>
 			<DockPanel DockPanel.Dock="Top">
-				<Image Source="/Resources/settings.png" Opacity="0.5" Width="16" Height="16" MouseDown="Preferences_MouseDown" DockPanel.Dock="Right" Style="{StaticResource actionStyle}" ToolTip="Settings" Margin="1, 0" />
-				<Image Source="/Resources/putty.png" Opacity="0.5" Width="16" Height="16" MouseDown="Putty_MouseDown" DockPanel.Dock="Right" Style="{StaticResource actionStyle}" ToolTip="Putty" Margin="1, 0" Visibility="{Binding Settings.ShowPuttyButton, Converter={StaticResource boolToVis}}"  />
+				<Button Tag="/Resources/settings.png" Style="{StaticResource imageButton}" DockPanel.Dock="Right" ToolTip="Settings" Margin="1, 0" Command="{Binding PreferencesCommand}"/>
+				<Button Tag="/Resources/putty.png" Style="{StaticResource imageButton}" DockPanel.Dock="Right" ToolTip="Putty" Margin="1, 0" Command="{Binding StartPuttyCommand}" Visibility="{Binding Settings.ShowPuttyButton, Converter={StaticResource boolToVis}}"/>
 				<Grid DockPanel.Dock="Right" Width="16" Height="16" VerticalAlignment="Center" Margin="1, 0">
 					<local:GifImage Width="16" Height="16" Panel.ZIndex="1" ToolTip="Updating..."
 									Uri="pack://application:,,,/Resources/throbber.gif"
 									Visibility="{Binding InstanceCollection.IsLoading, Converter={StaticResource boolToVis}}" 
 									RenderOptions.BitmapScalingMode="NearestNeighbor" />
-					<Image Source="/Resources/refresh.png" Opacity="0.5" Width="16" Height="16" MouseDown="RefreshButton_MouseDown" Style="{StaticResource actionStyle}" ToolTip="Update" />
+					<Button Tag="/Resources/refresh.png" Style="{StaticResource imageButton}" ToolTip="Update" Command="{Binding RefreshListCommand}"/>
 				</Grid>
+				<Button Tag="/Resources/error_small.png" Style="{StaticResource imageButton}" DockPanel.Dock="Right" ToolTip="There are some errors" Margin="1, 0" Command="{Binding ShowNextErrorCommand}" Visibility="{Binding Source={x:Static local:App.InstanceCollection}, Path=ErrorsPresent, Converter={StaticResource boolToVis}}"/>
 				<TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" x:Name="textBox" BorderThickness="0" />
 			</DockPanel>
 			<ListBox	

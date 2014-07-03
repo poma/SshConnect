@@ -9,6 +9,7 @@ using System.Windows.Controls;
 
 namespace AwsSsh.Plugins.Putty
 {
+	[Serializable]
 	public class PuttyInstanceSource : IInstanceSource
 	{
 		public string Name { get { return "Putty"; } }
@@ -32,7 +33,7 @@ namespace AwsSsh.Plugins.Putty
 				puttySessions = Registry.CurrentUser
 					.OpenSubKey(@"Software\SimonTatham\PuTTY\Sessions").GetSubKeyNames()
 					.Select(s => s.Replace("%20", " ")).ToList();
-			return puttySessions.Select(s => new PuttyInstance(s)).OfType<Instance>().ToList();
+			return puttySessions.Select(s => new PuttyInstance(this, s)).OfType<Instance>().ToList();
 		}
 	}
 }

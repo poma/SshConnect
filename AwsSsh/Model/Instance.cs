@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using System.Diagnostics;
 using System.Windows;
+using System.Xml.Serialization;
 
 namespace AwsSsh
 {
@@ -12,11 +13,28 @@ namespace AwsSsh
 	[DebuggerDisplay("Name = {_name}")]
 	public class Instance : INotifyPropertyChanged
 	{
-		private IInstanceSource _source;
+		private IInstanceSource _source;	
+		[XmlIgnore]
 		public IInstanceSource Source
 		{
 			get { return _source; }
 			set { _source = value; }
+		}
+
+		public Guid SourceGuid
+		{
+			get
+			{
+				return Source.Settings.Guid;
+			}
+			set
+			{
+				var src = App.InstanceCollection.InstanceSources.Where(s => s.Settings.Guid == value).FirstOrDefault();
+				if (src != null)
+					Source = src;
+				else
+					throw new ApplicationException("Corresponding source not found");
+			}
 		}
 
 		private string _name;

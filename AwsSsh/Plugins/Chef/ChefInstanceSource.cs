@@ -7,6 +7,7 @@ using System.Windows.Controls;
 
 namespace AwsSsh.Plugins.Chef
 {
+	[Serializable]
 	public class ChefInstanceSource:IInstanceSource
 	{
 		public string Name { get { return "Chef"; } }
@@ -23,6 +24,7 @@ namespace AwsSsh.Plugins.Chef
 			set { _settings = value as ChefSettings; }
 		}
 
+		[NonSerialized]
 		private ChefSettingsControl _settingsControl;
 		public Control SettingsControl
 		{
@@ -42,6 +44,7 @@ namespace AwsSsh.Plugins.Chef
 			var instances = json["rows"].ToArray()
 				.Select(s => new ChefInstance
 				{
+					Source = this,
 					Name = (string)s["name"],
 					Endpoint = (string)(s["automatic"]["cloud"] != null ? s["automatic"]["cloud"]["public_ipv4"] : s["automatic"]["ipaddress"]),
 					LastUpdate = DateTimeFromUnixTime((int)s["automatic"]["ohai_time"])

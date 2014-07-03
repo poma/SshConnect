@@ -104,24 +104,17 @@ namespace AwsSsh
 
 		private void Window_PreviewMouseUp(object sender, MouseButtonEventArgs e)
 		{
+			// to be able to press buttons we need to do it in dispatcher
+			Dispatcher.BeginInvoke(new Action(() => textBox.Focus()));
+		}
+		private void FocusTextBox(object sender, RoutedEventArgs e)
+		{
 			textBox.Focus();
 		}
 
-        private void Preferences_MouseDown(object sender, MouseButtonEventArgs e)
-		{
-			_model.PreferencesCommand.Execute(null);
-		}
 		private void listBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
 		{
 			_model.ExecuteCurrentCommand.Execute(null);
-		}
-		private void Putty_MouseDown(object sender, MouseButtonEventArgs e)
-		{
-			_model.StartPuttyCommand.Execute(null);
-		}
-		private void RefreshButton_MouseDown(object sender, MouseButtonEventArgs e)
-		{
-			_model.RefreshListCommand.Execute(null);
 		}
 	}
 }

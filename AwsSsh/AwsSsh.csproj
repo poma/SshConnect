@@ -37,7 +37,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>connect.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\connect.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AWSSDK, Version=1.4.11.0, Culture=neutral, PublicKeyToken=cd2d24cd2bace800, processorArchitecture=MSIL">
@@ -167,7 +167,7 @@
     <Resource Include="Resources\yellow.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="connect.ico" />
+    <Resource Include="Resources\connect.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\refresh.png" />
@@ -195,6 +195,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="BouncyCastle.Crypto.dll" />
+    <Resource Include="Resources\error_small.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

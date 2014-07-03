@@ -30,6 +30,7 @@ namespace AwsSsh
 		public static InstanceCollection InstanceCollection
 		{
 			get { return _instanceCollection; }
+			set { _instanceCollection = value; }
 		}
 
 		private static bool DontSaveSettings;
@@ -38,7 +39,8 @@ namespace AwsSsh
 		{
 			DispatcherUnhandledException += ExceptionDialog.Handler;
 			AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-			_instanceCollection = new InstanceCollection();
+			_instanceCollection = new InstanceCollection(Settings.InstanceSources.Cast<IInstanceSource>().ToList());
+			var t = Settings.ShowPuttyButton;
 
 			if (Settings.IsFirstTimeConfiguration)
 			{

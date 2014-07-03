@@ -59,9 +59,16 @@ namespace AwsSsh
 			}
 		}
 
+		private Stack<Exception> _errors = new Stack<Exception>();
+		public bool ErrorsPresent
+		{
+			get { return _errors.Count > 0; }
+		}
+
 		public InstanceCollection(List<IInstanceSource> sources = null)
 		{
 			InstanceSources = sources ?? new List<IInstanceSource>();
+			App.InstanceCollection = this; // needed to load cache
 
 			// todo: wrap exceptions
 			var list = InstanceCache.Load();
@@ -88,7 +95,9 @@ namespace AwsSsh
 					if (args.Error != null)
 					{
 						//_updateTimer.IsEnabled = false;
-						throw new Exception("Error downloading server list: " + args.Error.Message, args.Error);
+						_errors.Push(new ApplicationException("Error downloading server list: " + args.Error.Message, args.Error));
+						OnPropertyChanged("ErrorsPresent");
+						return;
 					}
 					var previousSelection = MainWindow.instance.listBox.SelectedItem as Instance;
 
@@ -116,6 +125,13 @@ namespace AwsSsh
 			itemsToAdd.ForEach(a => existingInstances.Add(a));
 			itemsToRemove.ForEach(a => existingInstances.Remove(a));
 			itemsToUpdate.ForEach(a => CopyPropertyAttribute.CopyProperties(a.New, a.Old));
+		}
+
+		public Exception GetNextException()
+		{
+			var ex = _errors.Pop();
+			OnPropertyChanged("ErrorsPresent");
+			return ex;
 		}
 
 		private class InstanceComparer : IEqualityComparer<Instance>
