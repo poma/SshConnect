@@ -3,7 +3,7 @@ SshConnect 2.0
 
 A nice windows tool that lets you quickly SSH to your Amazon EC2 or Chef-managed instances using Putty. Has built-in search that helps a lot when you have many instances.
 
-![Screenshot](https://raw.github.com/poma/SshConnect/master/Screenshots/Screenshot1.png)
+![Screenshot](https://cloud.githubusercontent.com/assets/2109710/3471027/4fa72c6c-02bf-11e4-9589-dd05895a12d7.png)
 
 Download
 ------------
