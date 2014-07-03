@@ -80,10 +80,10 @@ namespace AwsSsh
 		private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
 		{
 			if (args.Name.Contains("AWSSDK")) 
-				return LoadEmbeddedDll("AWSSDK.dll.gz");
+				return LoadEmbeddedDll("lib/AWSSDK.dll.gz");
 
 			if (args.Name.Contains("BouncyCastle"))
-				return LoadEmbeddedDll("BouncyCastle.Crypto.dll.gz");
+				return LoadEmbeddedDll("lib/BouncyCastle.Crypto.dll.gz");
 			
 			return null;
 		}
