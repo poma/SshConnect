@@ -26,6 +26,13 @@ namespace AwsSsh.Plugins.Chef
 			ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
 			var date = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ");
 
+			//X-Ops-Timestamp: A timestamp in ISO-8601 format. The time must be in UTC, indicated by a trailing Z, and separated by the character "T". The following is an example of a time in this format:
+			//2011-10-14T18:17:48Z
+			//X-Ops-UserId: The name of the API client whose private key will be used to create the authorization header.
+			//X-Ops-Content-Hash: The body of the request, hashed using SHA1 and encoded using Base64. See Hashing below.
+			//X-Ops-Sign: Set to "version=1.0"
+			//X-Ops-Authorization-N: One or more headers whose value are the signature of the "canonical headers", encoded in Base64. See Canonical Headers and X-Ops-Authorization Headers below.
+
 			client.Headers.Add("Accept", "application/json");
 			client.Headers.Add("X-Ops-Timestamp", date);
 			client.Headers.Add("X-Ops-UserId", _settings.ChefUser);
@@ -71,11 +78,3 @@ namespace AwsSsh.Plugins.Chef
 		}
 	}
 }
-
-
-//X-Ops-Timestamp: A timestamp in ISO-8601 format. The time must be in UTC, indicated by a trailing Z, and separated by the character "T". The following is an example of a time in this format:
-//2011-10-14T18:17:48Z
-//X-Ops-UserId: The name of the API client whose private key will be used to create the authorization header.
-//X-Ops-Content-Hash: The body of the request, hashed using SHA1 and encoded using Base64. See Hashing below.
-//X-Ops-Sign: Set to "version=1.0"
-//X-Ops-Authorization-N: One or more headers whose value are the signature of the "canonical headers", encoded in Base64. See Canonical Headers and X-Ops-Authorization Headers below.
