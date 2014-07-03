@@ -81,7 +81,7 @@ namespace AwsSsh
 		internal ExceptionDialogWindow(Exception e)
 		{
 			exception = e;
-			Error = e.Message;
+			Error = e.InnerMessages();
 			Details = e.GetXml().ToString();
 			InitializeComponent();
 		}

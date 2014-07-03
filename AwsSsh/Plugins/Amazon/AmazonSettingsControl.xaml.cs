@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -30,6 +31,21 @@ namespace AwsSsh.Plugins.Amazon
 			string link = ((sender as FrameworkElement).Tag ?? "").ToString();
 			if (!string.IsNullOrEmpty(link))
 				Process.Start(link);
+		}
+
+		private void TestConnection_Click(object sender, RoutedEventArgs e)
+		{
+			var src = new AmazonInstanceSource { Settings = DataContext as AmazonSettings };
+			testConnectionButton.IsEnabled = false;
+			Task.Factory.StartNew(() => src.GetInstanceList())
+				.ContinueWith(t =>
+				{
+					testConnectionButton.IsEnabled = true;
+					if (t.Exception != null)
+						ExceptionDialog.Show(t.Exception);
+					else
+						MessageBox.Show("Connection Successful");
+				}, TaskScheduler.FromCurrentSynchronizationContext());
 		}
 	}
 }

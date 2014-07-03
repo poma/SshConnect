@@ -19,17 +19,17 @@
 		</StackPanel.Resources>
 
 		<DockPanel>
-			<TextBlock Text="Chef server url:" />
+			<TextBlock Text="Chef server url:*" />
 			<TextBox Text="{Binding ChefUrl}" />
 		</DockPanel>
 
 		<DockPanel>
-			<TextBlock Text="Chef private key:" />
+			<TextBlock Text="Chef private key:*" />
 			<TextBox Text="{Binding ChefKey}" />
 		</DockPanel>
 
 		<DockPanel>
-			<TextBlock Text="Chef user:" />
+			<TextBlock Text="Chef user:*" />
 			<TextBox Text="{Binding ChefUser}" />
 		</DockPanel>
 
@@ -47,5 +47,7 @@
 			<TextBlock Text="Ssh arguments:" />
 			<TextBox Text="{Binding SshArguments}" />
 		</DockPanel>
+
+		<Button Content="Test connection" Padding="15, 2" Width="150" HorizontalAlignment="Left" Click="TestConnection_Click" x:Name="testConnectionButton" Margin="142,8,0,0" />
 	</StackPanel>
 </UserControl>

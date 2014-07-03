@@ -105,17 +105,15 @@ namespace AwsSsh
 						OnPropertyChanged("ErrorsPresent");
 						return;
 					}
-					var previousSelection = MainWindow.instance.listBox.SelectedItem as Instance;
+					
+					if (MainWindowViewModel.instance != null)
+						MainWindowViewModel.instance.FreezeSelection();
 
 					var res = args.Result as Tuple<IInstanceSource, List<Instance>>;
-					using (MainWindowViewModel.instance.InstanceCollectionView.DeferRefresh())
-						MergeInstances(res.Item1, res.Item2);
+					MergeInstances(res.Item1, res.Item2);
 
-					if (MainWindow.instance.listBox.Items.Count > 0)
-						if (previousSelection != null && MainWindow.instance.listBox.Items.Contains(previousSelection))
-							MainWindow.instance.listBox.SelectedItem = previousSelection;
-						else
-							MainWindow.instance.listBox.SelectedIndex = 0;
+					if (MainWindowViewModel.instance != null)
+						MainWindowViewModel.instance.RestoreSelection();
 				};
 				w.RunWorkerAsync(src);
 			}

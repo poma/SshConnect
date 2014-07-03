@@ -108,6 +108,27 @@ namespace AwsSsh
 			e.Accepted = true;
 		}
 
+		private Instance _previousSelection;
+		private IDisposable _refreshHandle;
+
+		public void FreezeSelection()
+		{
+			_previousSelection = MainWindow.instance.listBox.SelectedItem as Instance;
+			_refreshHandle = InstanceCollectionView.DeferRefresh();
+		}
+
+		public void RestoreSelection()
+		{
+			if (MainWindow.instance.listBox.Items.Count > 0)
+				if (_previousSelection != null && MainWindow.instance.listBox.Items.Contains(_previousSelection))
+					MainWindow.instance.listBox.SelectedItem = _previousSelection;
+				else
+					MainWindow.instance.listBox.SelectedIndex = 0;
+
+			if (_refreshHandle != null)
+				_refreshHandle.Dispose();
+		}
+
 
 		public ICommand PreferencesCommand { get { return new RelayCommand(ShowPreferences); } }
 		public ICommand ExecuteCurrentCommand { get { return new RelayCommand(ConnectToCurrentServer); } }

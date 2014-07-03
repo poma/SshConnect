@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -22,6 +23,21 @@ namespace AwsSsh.Plugins.Chef
 		public ChefSettingsControl()
 		{
 			InitializeComponent();
+		}
+
+		private void TestConnection_Click(object sender, RoutedEventArgs e)
+		{
+			var src = new ChefInstanceSource { Settings = DataContext as ChefSettings };
+			testConnectionButton.IsEnabled = false;
+			Task.Factory.StartNew(() => src.GetInstanceList())
+				.ContinueWith(t => 
+				{
+					testConnectionButton.IsEnabled = true;
+					if (t.Exception != null)
+						ExceptionDialog.Show(t.Exception);
+					else
+						MessageBox.Show("Connection Successful");
+				}, TaskScheduler.FromCurrentSynchronizationContext());
 		}
 	}
 }

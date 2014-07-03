@@ -40,8 +40,7 @@ namespace AwsSsh
 			try
 			{
 				Cursor = Cursors.Wait;
-				//if (!CheckConfig()) return;
-				//if (!AmazonInstanceSource.CheckConnection()) return;
+				if (!CheckConfig()) return;
 				DialogResult = true;
 			}
 			finally
@@ -109,7 +108,9 @@ namespace AwsSsh
 
 			App.Settings.InstanceSources.Add(source);
 			App.InstanceCollection.InstanceSources.Add(source);
-			tabControl.Items.Add(new TabItem { Header = source.Name, Content = source.SettingsControl, Tag = source, DataContext = source.Settings });
+			var tab = new TabItem { Header = source.Name, Content = source.SettingsControl, Tag = source, DataContext = source.Settings };
+			tabControl.Items.Add(tab);
+			tabControl.SelectedItem = tab;
 			if (MainWindowViewModel.instance != null)
 				MainWindowViewModel.instance.DoRefreshList();
 		}
@@ -132,10 +133,15 @@ namespace AwsSsh
 		{
 			if (!File.Exists(App.Settings.PuttyPath))
 			{
-				ExceptionDialog.Show("Putty not found. Please check your configuration");
+				ExceptionDialog.Show("Putty not found. Please specify currect putty path.");
 				return false;
 			}
 			return true;
+		}
+
+		private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			deleteSourceButton.IsEnabled = tabControl.SelectedItem as TabItem != null && (tabControl.SelectedItem as TabItem).Tag as IInstanceSource != null;
 		}
 	}
 }

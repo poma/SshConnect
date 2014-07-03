@@ -45,7 +45,7 @@
 		</DockPanel>
 
 		<DockPanel>
-			<TextBlock Text="Service URL:" />
+			<TextBlock Text="Service URL:*" />
 			<TextBox Text="{Binding ServiceUrl}" />
 		</DockPanel>
 
@@ -63,5 +63,7 @@
 			<TextBlock Text="Ssh arguments:" />
 			<TextBox Text="{Binding SshArguments}" />
 		</DockPanel>
+
+		<Button Content="Test connection" Padding="15, 2" Width="150" HorizontalAlignment="Left" x:Name="testConnectionButton" Click="TestConnection_Click" Margin="142,8,0,0" />
 	</StackPanel>
 </UserControl>
