@@ -68,6 +68,12 @@ namespace AwsSsh
 		public InstanceCollection(List<IInstanceSource> sources = null)
 		{
 			InstanceSources = sources ?? new List<IInstanceSource>();
+			if (InstanceSources.Where(s => s is PuttyInstanceSource).Count() == 0)
+			{
+				var src = new PuttyInstanceSource();
+				App.Settings.InstanceSources.Add(src);
+				InstanceSources.Add(src);
+			}
 			App.InstanceCollection = this; // needed to load cache
 
 			// todo: wrap exceptions

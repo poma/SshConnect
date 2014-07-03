@@ -20,6 +20,7 @@ namespace AwsSsh
 {
 	public class MainWindowViewModel : ObservableObject
 	{
+		// Used for dirty hacks
 		public static MainWindowViewModel instance;
 
 		public Settings Settings { get { return App.Settings; }	}

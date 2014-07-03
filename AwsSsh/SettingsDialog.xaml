@@ -22,8 +22,6 @@
 			<Border BorderThickness="0, 1, 0, 0" BorderBrush="#f1eeee" Background="#DBDBE0" SnapsToDevicePixels="True">
 				<Grid>
 					<StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="8, 0">
-						<TextBlock Style="{StaticResource LinkStyle}" Text="Download putty" Tag="http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html" />
-						<TextBlock Style="{StaticResource LinkStyle}" Text="Start putty" Tag="{Binding PuttyPath}" />
 						<TextBlock Style="{StaticResource LinkStyle}" Text="Homepage" Tag="https://github.com/poma/AwsSsh" />
 						<TextBlock Style="{StaticResource LinkStyle}" Text="Share ▼" x:Name="shareButton" TextDecorations="None" MouseLeftButtonUp="ShowShareMenu">
 							<TextBlock.ContextMenu>
@@ -71,11 +69,12 @@
 							<Setter Property="TextAlignment" Value="Left" />
 							<Setter Property="Margin" Value="0, 0, 8, 0" />
 						</Style>
-					</StackPanel.Resources>
+					</StackPanel.Resources>					
 
 					<DockPanel>
 						<TextBlock Text="Path to putty.exe:*" />
-						<TextBox Text="{Binding PuttyPath}" />
+						<TextBlock DockPanel.Dock="Right" Margin="4" Style="{StaticResource LinkStyle}" Text="Download putty" Tag="http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html" />
+						<TextBox Text="{Binding PuttyPath}" />					
 					</DockPanel>
 
 					<DockPanel>
@@ -114,6 +113,10 @@
 
 					<Grid>
 						<Button Content="Clear settings" Padding="15, 2" Width="110" HorizontalAlignment="Left" Click="ClearSettings_Click" Margin="142,8,0,0" />
+					</Grid>
+					
+					<Grid>
+						<Button Content="Start putty" Padding="15, 2" Width="110" HorizontalAlignment="Left" Click="StartPutty_Click" Margin="142,8,0,0" />
 					</Grid>
 				</StackPanel>
 			</TabItem>

@@ -23,6 +23,7 @@ namespace AwsSsh.Plugins.Chef
 		public string ChefRequest(string path, string query = null)
 		{
 			WebClient client = new WebClient();
+			ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
 			var date = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ");
 
 			client.Headers.Add("Accept", "application/json");
@@ -43,7 +44,7 @@ namespace AwsSsh.Plugins.Chef
 				n++;
 			}
 
-			return client.DownloadString("http://chef.redhelper.ru:4000" + path + (string.IsNullOrEmpty(query) ? "" : "?" + query));
+			return client.DownloadString(_settings.ChefUrl + path + (string.IsNullOrEmpty(query) ? "" : "?" + query));
 		}
 
 		public string Hash(string s)

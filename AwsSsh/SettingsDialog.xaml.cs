@@ -57,6 +57,12 @@ namespace AwsSsh
 				Process.Start(link);
 		}
 
+		private void StartPutty_Click(object sender, RoutedEventArgs e)
+		{
+			Process.Start(App.Settings.PuttyPath);
+		}
+
+
 		private void ClearSettings_Click(object sender, RoutedEventArgs e)
 		{
 			if (MessageBox.Show("All your settings and cache will be cleared and application will shutdown", "Clear data", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
@@ -104,6 +110,8 @@ namespace AwsSsh
 			App.Settings.InstanceSources.Add(source);
 			App.InstanceCollection.InstanceSources.Add(source);
 			tabControl.Items.Add(new TabItem { Header = source.Name, Content = source.SettingsControl, Tag = source, DataContext = source.Settings });
+			if (MainWindowViewModel.instance != null)
+				MainWindowViewModel.instance.DoRefreshList();
 		}
 
 		private void DeleteSourceClick(object sender, RoutedEventArgs e)
@@ -116,6 +124,7 @@ namespace AwsSsh
 				App.Settings.InstanceSources.Remove(source);
 				App.InstanceCollection.InstanceSources.Remove(source);
 				tabControl.Items.Remove(tabControl.SelectedItem);
+				App.InstanceCollection.Instances.Where(a => a.Source == source).ToList().ForEach(a => App.InstanceCollection.Instances.Remove(a));
 			}
 		}
 

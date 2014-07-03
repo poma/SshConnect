@@ -28,7 +28,7 @@ namespace AwsSsh
 		}
 		
 
-		protected SettingsBase()
+		public SettingsBase()
 		{
 			_properties = GetUserProperties();
 			_properties.ForEach(p => p.Property.SetValue(this, p.Attribute.DefaultValue, null));

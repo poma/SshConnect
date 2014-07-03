@@ -14,10 +14,16 @@ namespace AwsSsh.Plugins.Putty
 	{
 		public string Name { get { return "Putty"; } }
 
+		private SettingsBase _settings;
 		public SettingsBase Settings
 		{
-			get { return null; }
-			set { }
+			get
+			{
+				if (_settings == null)
+					_settings = new SettingsBase();
+				return _settings;
+			}
+			set { _settings = value; }
 		}
 
 		public Control SettingsControl
@@ -29,6 +35,8 @@ namespace AwsSsh.Plugins.Putty
 
 		public List<Instance> GetInstanceList()
 		{
+			if (!App.Settings.IncludePuttySessionsInList)
+				return new List<Instance>();
 			if (puttySessions == null)
 				puttySessions = Registry.CurrentUser
 					.OpenSubKey(@"Software\SimonTatham\PuTTY\Sessions").GetSubKeyNames()

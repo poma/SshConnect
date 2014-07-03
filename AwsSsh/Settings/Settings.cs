@@ -63,6 +63,8 @@ namespace AwsSsh
 				if (includePuttySessionsInList == value) return;
 				includePuttySessionsInList = value;
 				OnPropertyChanged("IncludePuttySessionsInList");
+				if (MainWindowViewModel.instance != null)
+					MainWindowViewModel.instance.DoRefreshList();
 			}
 		}
 
