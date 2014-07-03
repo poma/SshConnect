@@ -7,7 +7,7 @@ A nice windows tool that lets you quickly SSH to your Amazon EC2 or Chef-managed
 
 Download
 ------------
-You can download compiled version from [downloads page](https://github.com/poma/SshConnect/downloads)
+You can download compiled version from [releases page](https://github.com/poma/SshConnect/releases)
 
 
 Requirements
