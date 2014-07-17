@@ -50,6 +50,7 @@ namespace SshConnect
 				if (_name == value) return;
 				_name = value;
 				OnPropertyChanged("Name");
+				OnPropertyChanged("ClipboardText");
 			}
 		}
 

@@ -12,6 +12,7 @@ namespace SshConnect.Plugins.Chef
 		private ChefSettings Settings { get { return Source.Settings as ChefSettings; } }
 
 		private string endpoint;
+		[CopyProperty]
 		public string Endpoint
 		{
 			get { return endpoint; }
@@ -20,10 +21,13 @@ namespace SshConnect.Plugins.Chef
 				if (endpoint == value) return;
 				endpoint = value;
 				OnPropertyChanged("Endpoint");
+				OnPropertyChanged("ClipboardText");
+				OnPropertyChanged("Tooltip");
 			}
 		}
 
 		private DateTime lastUpdate;
+		[CopyProperty]
 		public DateTime LastUpdate
 		{
 			get { return lastUpdate; }
