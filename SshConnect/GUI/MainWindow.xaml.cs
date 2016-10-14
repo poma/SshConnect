@@ -37,6 +37,9 @@ namespace SshConnect
 
 			InitializeComponent();
 
+			// Provent losing focus when invoked using hotkey
+			Loaded += (s, e) => Activate();
+
 			// Return focus for mouse clicks etc.
 			//new DispatcherTimer { IsEnabled = true, Interval = TimeSpan.FromMilliseconds(200) }
 			//	.Tick += (obj, args) => { if (!textBox.IsFocused) textBox.Focus(); };
